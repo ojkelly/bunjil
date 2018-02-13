@@ -5,6 +5,7 @@
     "license": "MIT",
     "author": "Owen Kelly <owen@owenkelly.com.au>",
     "scripts": {
+        "prisma": "cd examples/simple && dotenv -e ../../.env -- prisma info",
         "example-simple-debug":
             "dotenv -- ts-node --inspect-brk examples/simple/src/index.ts",
         "example-simple-clean": "rimraf examples/simple/src/.graphql/**",
