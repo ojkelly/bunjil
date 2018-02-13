@@ -69,14 +69,31 @@ type BunjilOptions = {
     hooks?: {
         authenticationCallback: AuthenticationCallback;
         authorizationCallback: AuthorizationCallback;
+        sanizationCallback: SantizationCallback<any>;
     };
 };
 
 interface AuthenticationCallback {
     (args: any, info: any, context: any): Error | void;
 }
+
+type AuthorizationCallbackOptions = {
+    operation: string;
+    resource: string;
+    context: any;
+};
 interface AuthorizationCallback {
-    (ACLKey: string, context: any): Error | boolean;
+    (AuthorizationCallbackOptions): Error | boolean;
+}
+type SantizationCallbackOptions<Value> = {
+    resource: string;
+    field: string;
+    value: Value;
+    context: any;
+    returnType: any;
+};
+interface SantizationCallback<Value> {
+    (SantizationCallbackOptions): any;
 }
 
 // Bunjil
@@ -211,13 +228,12 @@ class Bunjil {
         info: any,
         next: any,
     ): Promise<any> {
-        console.dir({ root, args, context, info, next });
+        // console.dir({ root, args, context, info, next });
 
         // construct an ACL name
         let resource: string = `${info.parentType.name}:`;
         resource = `${resource}:${info.fieldName}`;
 
-        // console.log({ ACLKey });
         if (
             context.authorizationCallback(
                 info.operation.operation,
@@ -227,8 +243,14 @@ class Bunjil {
         ) {
             // you can modify root, args, context, info
             const result: Promise<any> = await next();
-            // you can modify result
-            return result; // you must return value
+
+            return context.sanitizationCallback({
+                resource,
+                field: info.fieldName,
+                value: result,
+                context,
+                returnType: info.returnType,
+            });
         }
         return null;
     }
@@ -268,6 +290,7 @@ class Bunjil {
                 context: {
                     ...this.graphQL.context,
                     authorizationCallback: this.authorizationCallback,
+                    sanitizationCallback: this.sanitizationCallback,
                 },
             }),
         );
@@ -492,7 +515,7 @@ class Bunjil {
         info: any,
         context: any,
     ): Error | void {
-        console.log("authenticationCallback");
+        // console.log("authenticationCallback");
         context.user = {
             id: "cjdbhy691001701374eywgoh6",
             roles: ["authenticated user"],
@@ -502,13 +525,40 @@ class Bunjil {
             return new Error("Not authenticated");
         }
     }
-    public authorizationCallback(
-        operation: string,
-        resource: string,
-        context: any,
-    ): Error | boolean {
-        console.log("authorizationCallback", operation, resource);
+    public authorizationCallback({
+        operation,
+        resource,
+        context,
+    }: AuthorizationCallbackOptions): Error | boolean {
+        // console.log("authorizationCallback", operation, resource);
         return true;
+    }
+
+    /**
+     * Called after an upstream GraphQL query is run, but before the result
+     * is returned back to the user.
+     *
+     * This function can be used to sanitize fields before they are returned.
+     * @param resource
+     * @param context
+     */
+    public sanitizationCallback<Value>({
+        resource,
+        field,
+        value,
+        context,
+        returnType,
+    }: SantizationCallbackOptions<Value>): Value | null {
+        // console.log({
+        //     type: "sanitizationCallback",
+        //     resource,
+        //     field,
+        //     value,
+        //     context,
+        //     returnType,
+        // });
+
+        return value;
     }
 }
 
