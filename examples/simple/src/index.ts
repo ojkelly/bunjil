@@ -2,7 +2,6 @@ import { Bunjil } from "../../../src/index";
 import { Prisma, typeDefs } from "./.graphql/prisma";
 import { extractFragmentReplacements, forwardTo } from "prisma-binding";
 import { FragmentReplacements } from "graphql-binding/dist/types";
-import { GraphQLSchema } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 
 console.log("Running Simple Example");

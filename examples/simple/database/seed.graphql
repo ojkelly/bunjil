@@ -3,7 +3,7 @@ mutation {
         data: {
             email: "developer@example.com"
             password: "$2a$10$hACwQ5/HQI6FhbIISOUVeusy3sKyUDhSq36fF5d/54aAdiygJPFzm" # plaintext password: "nooneknows"
-            name: "Sarah"
+            name: "Bunjil"
             posts: {
                 create: [
                     {

@@ -41,14 +41,3 @@ typings/**
 
 yarn-error.log
 
-server/.build/
-server/.build/**
-server/node_modules/**
-server/.import/**
-
-# Don't store compiled graphql schema
-
-src/graphql/compiled/**
-
-# This is now compiled
-src/server/types.graphql
