@@ -21,6 +21,9 @@ import { graphqlKoa, KoaGraphQLOptionsFunction } from "apollo-server-koa";
 import KoaPlaygroundMiddleware from "graphQL-playground-middleware-koa";
 import * as winston from "winston";
 import { GraphQLConfigData } from "graphQL-config";
+import { Wahn, Policy, PolicyEffect, PolicyCondition } from "wahn";
+
+import { ResolverError, AuthorizationError } from "./errors";
 
 interface OnTypeConflictCallback {
     (left: GraphQLNamedType, right: GraphQLNamedType): GraphQLNamedType;
@@ -66,6 +69,9 @@ type BunjilOptions = {
         playground: string | undefined;
     };
 
+    // Access control
+    policies: Policy[];
+
     hooks?: {
         authenticationCallback: AuthenticationCallback;
         authorizationCallback: AuthorizationCallback;
@@ -74,23 +80,23 @@ type BunjilOptions = {
 };
 
 interface AuthenticationCallback {
-    (args: any, info: any, context: any): Error | void;
+    (args: any, info: any, context: any): void;
 }
 
 type AuthorizationCallbackOptions = {
-    operation: string;
+    action: string;
     resource: string;
     context: any;
 };
 interface AuthorizationCallback {
-    (AuthorizationCallbackOptions): Error | boolean;
+    (AuthorizationCallbackOptions): boolean;
 }
 type SantizationCallbackOptions<Value> = {
-    resource: string;
-    field: string;
-    value: Value;
     context: any;
+    field: string;
+    resource: string;
     returnType: any;
+    value: Value;
 };
 interface SantizationCallback<Value> {
     (SantizationCallbackOptions): any;
@@ -150,6 +156,8 @@ class Bunjil {
             Subscription: any;
         };
     };
+
+    private wahn: Wahn | undefined;
 
     // [ Constructor ]--------------------------------------------------------------------------
 
@@ -219,6 +227,14 @@ class Bunjil {
                     options.hooks.authorizationCallback;
             }
         }
+
+        // Access Control
+        if (Array.isArray(options.policies)) {
+            this.wahn = new Wahn({
+                policies: options.policies,
+            });
+            console.log("constructor wahn", this.wahn instanceof Wahn);
+        }
     }
 
     private async resolverHook(
@@ -228,31 +244,42 @@ class Bunjil {
         info: any,
         next: any,
     ): Promise<any> {
-        // console.dir({ root, args, context, info, next });
+        console.dir({ root, args, context, info, next });
 
         // construct an ACL name
         let resource: string = `${info.parentType.name}:`;
         resource = `${resource}:${info.fieldName}`;
+        const action: string = info.operation.operation;
 
-        if (
-            context.authorizationCallback(
-                info.operation.operation,
+        try {
+            const authorization: boolean = this.authorizationCallback({
+                action,
                 resource,
                 context,
-            )
-        ) {
-            // you can modify root, args, context, info
-            const result: Promise<any> = await next();
-
-            return context.sanitizationCallback({
-                resource,
-                field: info.fieldName,
-                value: result,
-                context,
-                returnType: info.returnType,
             });
+            if (authorization === true) {
+                // you can modify root, args, context, info
+                const result: Promise<any> = await next();
+
+                return this.sanitizationCallback({
+                    resource,
+                    field: info.fieldName,
+                    value: result,
+                    context,
+                    returnType: info.returnType,
+                });
+            } else if (authorization === false) {
+                throw new AuthorizationError("Access denied");
+            }
+            // throw new ResolverError(
+            //     `Error resolving action: ${action} | resource: ${resource}| authorization: ${authorization}`,
+            // );
+        } catch (err) {
+            if (this.debug) {
+                console.debug("resolverHook:", err.message, err.stack);
+            }
+            throw err;
         }
-        return null;
     }
 
     // [ Instatition ]--------------------------------------------------------------------------
@@ -268,7 +295,7 @@ class Bunjil {
         );
 
         // Add our resolverHook to every resolver
-        addMiddleware(this.graphQL.schema, this.resolverHook);
+        addMiddleware(this.graphQL.schema, this.resolverHook.bind(this));
     }
     /**
      * Add our graphQL endpoints to Koa
@@ -289,10 +316,13 @@ class Bunjil {
                 tracing: true,
                 context: {
                     ...this.graphQL.context,
-                    authorizationCallback: this.authorizationCallback,
-                    sanitizationCallback: this.sanitizationCallback,
+                    user: {
+                        id: "cjdbhy691001701374eywgoh6",
+                        roles: ["authenticated user"],
+                    },
                 },
             }),
+            this.sanitizationCallback,
         );
 
         // Add the graphql GET route
@@ -525,13 +555,47 @@ class Bunjil {
             return new Error("Not authenticated");
         }
     }
+
+    /**
+     * Run before a resolver calls upstream, used to verify
+     * the current user has access to the field and operation
+     *
+     * TODO Cache authorization resolves, so we only need to lookup once
+     * @param options
+     */
     public authorizationCallback({
-        operation,
+        action,
         resource,
         context,
-    }: AuthorizationCallbackOptions): Error | boolean {
-        // console.log("authorizationCallback", operation, resource);
-        return true;
+    }: AuthorizationCallbackOptions): boolean {
+        try {
+            console.log("authorizationCallback", action, resource);
+            console.log(
+                "authorizationCallback wahn",
+                this.wahn instanceof Wahn,
+            ),
+                this;
+            if (this.wahn instanceof Wahn) {
+                const authorization: boolean = this.wahn.evaluateAccess({
+                    context,
+                    action,
+                    resource,
+                });
+                if (this.debug) {
+                    console.debug({
+                        type: "authorizationCallback",
+                        action,
+                        resource,
+                        authorization,
+                    });
+                }
+                return authorization;
+            }
+            throw Error("Error: no policies.");
+        } catch (err) {
+            console.debug(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -543,20 +607,23 @@ class Bunjil {
      * @param context
      */
     public sanitizationCallback<Value>({
-        resource,
-        field,
-        value,
         context,
+        field,
+        resource,
         returnType,
+        value,
     }: SantizationCallbackOptions<Value>): Value | null {
-        // console.log({
-        //     type: "sanitizationCallback",
-        //     resource,
-        //     field,
-        //     value,
+        // console.log("sna", {
         //     context,
+        //     field,
+        //     resource,
         //     returnType,
+        //     value,
         // });
+
+        // if (field === "password") {
+        //     throw new Error("Cannot access password.");
+        // }
 
         return value;
     }
@@ -570,6 +637,9 @@ export {
     playgroundOptions,
     playgroundTheme,
     PlaygroundSettings,
+    Policy,
+    PolicyEffect,
+    PolicyCondition,
 };
 
 function isType(type: string, name: string, value: any): boolean | TypeError {

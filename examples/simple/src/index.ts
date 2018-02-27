@@ -1,8 +1,14 @@
-import { Bunjil } from "../../../src/index";
+import {
+    Bunjil,
+    Policy,
+    PolicyCondition,
+    PolicyEffect,
+} from "../../../src/index";
 import { Prisma, typeDefs } from "./.graphql/prisma";
 import { extractFragmentReplacements, forwardTo } from "prisma-binding";
 import { FragmentReplacements } from "graphql-binding/dist/types";
 import { makeExecutableSchema } from "graphql-tools";
+import * as faker from "faker";
 
 console.log("Running Simple Example");
 
@@ -17,6 +23,16 @@ const prisma: Prisma = new Prisma({
 });
 
 // [ Prepare server ]-------------------------------------------------------------------------------
+
+const policies: Policy[] = [
+    {
+        id: faker.random.uuid(),
+        resources: ["Query::posts", "Post::*", "User::*", "Author::*"],
+        actions: ["query"],
+        effect: PolicyEffect.Allow,
+        roles: ["authenticated user"],
+    },
+];
 
 const bunjil: Bunjil = new Bunjil({
     server: {
@@ -35,6 +51,7 @@ const bunjil: Bunjil = new Bunjil({
         subscriptions: "/graphql/subscriptions",
         playground: "/playground",
     },
+    policies,
 });
 
 bunjil.addPrismaSchema({ typeDefs, prisma, contextKey: "database" });
@@ -57,10 +74,12 @@ bunjil.addPrismaSchema({ typeDefs, prisma, contextKey: "database" });
 
 // [ Start Server ]---------------------------------------------------------------------------------
 // tslint:disable-next-line:no-console
-bunjil.start(() =>
+bunjil.start(() => {
     console.log(
         `Started on ${process.env.BUNJIL_PROTOCOL}://${
             process.env.BUNJIL_HOSTNAME
         }:${process.env.BUNJIL_PORT}`,
-    ),
-);
+    );
+
+    // Test GraphQL query
+});
