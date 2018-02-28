@@ -49,7 +49,7 @@ interface PlaygroundSettings {
 
 type BunjilOptions = {
     // Meta
-    debug: boolean;
+    debug?: boolean;
 
     playgroundOptions: playgroundOptions;
 
@@ -57,7 +57,7 @@ type BunjilOptions = {
     server: {
         protocol: string;
         hostname: string;
-        port: number;
+        port?: number;
         tracing?: boolean | undefined;
         cacheControl?: boolean | undefined;
     };
@@ -119,7 +119,7 @@ class Bunjil {
     // [ Properties ]--------------------------------------------------------------------------
 
     // Meta properties
-    private debug: boolean | undefined;
+    private debug: boolean = false;
     private logger: winston.LoggerInstance;
 
     public playgroundOptions: playgroundOptions = {
@@ -132,7 +132,7 @@ class Bunjil {
     public serverConfig: {
         protocol: string;
         hostname: string;
-        port: number;
+        port?: number;
         tracing: boolean;
         cacheControl: boolean;
     };
@@ -166,7 +166,9 @@ class Bunjil {
      * @param options
      */
     constructor(options: BunjilOptions) {
-        this.debug = options.debug;
+        if (options.debug) {
+            this.debug = options.debug;
+        }
         // Setup Winston as the logger, and only log when Debug enabled
         this.logger = new winston.Logger({
             level: "info",
@@ -195,7 +197,6 @@ class Bunjil {
             ...options.server,
             protocol: options.server.protocol,
             hostname: options.server.hostname,
-            port: Number(options.server.port),
             tracing:
                 typeof options.server.tracing === "boolean"
                     ? options.server.tracing
@@ -205,6 +206,10 @@ class Bunjil {
                     ? options.server.cacheControl
                     : false,
         };
+
+        if (options.server.port) {
+            this.serverConfig.port = Number(options.server.port);
+        }
 
         // Init the graphQL props
         this.graphQL = {
@@ -233,7 +238,6 @@ class Bunjil {
             this.wahn = new Wahn({
                 policies: options.policies,
             });
-            console.log("constructor wahn", this.wahn instanceof Wahn);
         }
     }
 
@@ -354,7 +358,7 @@ class Bunjil {
      * Prepare the GraphQL routes, and star the Koa server
      * @param callback
      */
-    public async start(callback: any): Promise<void> {
+    public async start(): Promise<void> {
         this.koa.on("log", this.logger.info);
 
         // Add the graphQL routes
@@ -368,11 +372,7 @@ class Bunjil {
         // Finalise the methods for Koa
         this.koa.use(this.router.allowedMethods());
         // Start Koa
-        this.koa.listen(
-            this.serverConfig.port,
-            this.serverConfig.hostname,
-            callback,
-        );
+        this.koa.listen(this.serverConfig.port, this.serverConfig.hostname);
     }
 
     public resolveAuthCheck(resolver: any): boolean {
@@ -481,7 +481,7 @@ class Bunjil {
         onTypeConflict,
         resolvers,
     }: {
-        schemas: Array<GraphQLSchema | string>;
+        schemas: (GraphQLSchema | string)[];
         onTypeConflict?: OnTypeConflictCallback | undefined;
         resolvers?: UnitOrList<
             IResolvers | ((mergeInfo: MergeInfo) => IResolvers)
@@ -501,7 +501,7 @@ class Bunjil {
             onTypeConflictCallback = onTypeConflictCallback;
         }
 
-        let schemasToMerge: Array<GraphQLSchema | string>;
+        let schemasToMerge: (GraphQLSchema | string)[];
         if (typeof this.graphQL.schema === "undefined") {
             this.logger.info("Adding initial schema");
             schemasToMerge = schemas;
@@ -570,11 +570,7 @@ class Bunjil {
     }: AuthorizationCallbackOptions): boolean {
         try {
             console.log("authorizationCallback", action, resource);
-            console.log(
-                "authorizationCallback wahn",
-                this.wahn instanceof Wahn,
-            ),
-                this;
+
             if (this.wahn instanceof Wahn) {
                 const authorization: boolean = this.wahn.evaluateAccess({
                     context,
