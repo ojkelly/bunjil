@@ -87,6 +87,6 @@
         "wedgetail": "^1.0.0"
     },
     "resolutions": {
-        "graphql": "0.13.0"
+        "graphql": "0.13.1"
     }
 }

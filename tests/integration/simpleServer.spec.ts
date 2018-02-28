@@ -33,14 +33,15 @@ test("Can create server with a simple schema, and respond to query", async t => 
       }
     `;
     const schema = makeExecutableSchema({ typeDefs });
-    console.log({ schema });
+    addMockFunctionsToSchema({ schema });
+    // console.log({ schema });
     const policies: Policy[] = [
         {
             id: faker.random.uuid(),
-            resources: ["Query::posts", "Post::*", "User::*"],
+            resources: ["Query::topPosts", "Post::*", "User::*"],
             actions: ["query"],
             effect: PolicyEffect.Allow,
-            roles: ["authenticated user"],
+            roles: ["*"],
         },
     ];
 
@@ -87,7 +88,9 @@ test("Can create server with a simple schema, and respond to query", async t => 
               }
           `,
         });
-    console.debug(res);
-    t.is(res.body, "ava@rocks.com");
+    console.debug(res.body.data);
+    t.is(res.body.data, {
+        topPosts: null,
+    });
     t.is(res.status, 200);
 });
