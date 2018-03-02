@@ -61,12 +61,14 @@
         "koa-compose": "^4.0.0",
         "koa-compress": "^2.0.0",
         "koa-router": "^7.4.0",
+        "memory-cache": "^0.2.0",
         "prisma-binding": "^1.5.13",
         "wahn": "^0.9.10",
         "winston": "^2.4.0"
     },
     "devDependencies": {
         "@types/bcryptjs": "2.4.1",
+        "@types/memory-cache": "^0.2.0",
         "@types/faker": "^4.1.2",
         "@types/koa": "^2.0.44",
         "@types/node": "^9.4.6",

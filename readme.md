@@ -107,3 +107,14 @@ bunjil.addAuthorizationCallback(authorizationCallback);
 # ACLs
 
 Bunjil comes with an ACL implementation, but you can override this with your own by replacing the authorizationCallback.
+
+# Roadmap
+
+* [x] Merge multiple GraphQL schemas into one public schema
+* [ ] Ability to hide Types
+* [ ] Ability to hide fields (masking)
+* [x] Policy based authorization down to the field/edge level
+* [ ] Caching, and caching policies down to the field level
+* [ ] Query sanitization
+* [x] Authentication hook
+* [x] Authorization hook

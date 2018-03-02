@@ -12,7 +12,7 @@ import * as request from "supertest";
 
 import { Bunjil, Policy, PolicyCondition, PolicyEffect } from "../../src/index";
 
-test("Can authenticate, and run authenticated query", async t => {
+test.skip("Can authenticate, and run authenticated query", async t => {
     const topPostsLimit: number = 10;
 
     const typeDefs: string = `
@@ -105,4 +105,12 @@ test("Can authenticate, and run authenticated query", async t => {
             }
         `,
         });
+    t.is(res.status, 200);
+    t.notDeepEqual(res.body.data, {
+        topPosts: null,
+    });
+    t.is(res.body.data.errors, undefined);
+    if (res.body.data.topPosts) {
+        t.is(res.body.data.topPosts.length, topPostsLimit);
+    }
 });

@@ -5,6 +5,7 @@ import { FragmentReplacements } from "graphql-binding/dist/types";
 import { GraphQLOptions } from "apollo-server-core";
 import * as koaCompress from "koa-compress";
 import { addMiddleware } from "graphql-add-middleware";
+import * as cache from "memory-cache";
 import {
     mergeSchemas,
     makeExecutableSchema,
@@ -201,8 +202,11 @@ class Bunjil {
                 resource,
                 context,
             });
+
             if (authorization === true) {
                 // you can modify root, args, context, info
+                // By awaiting next here we are passing execution to the resolver hook defined
+                // by the server at runtime
                 const result: Promise<any> = await next();
 
                 return this.sanitizationCallback({
@@ -503,9 +507,8 @@ class Bunjil {
         resource,
         context,
     }: AuthorizationCallbackOptions): boolean {
+        // console.log("authorizationCallback", action, resource);
         try {
-            console.log("authorizationCallback", action, resource);
-
             if (this.wahn instanceof Wahn) {
                 const authorization: boolean = this.wahn.evaluateAccess({
                     context,
@@ -552,9 +555,7 @@ class Bunjil {
         //     value,
         // });
 
-        // if (field === "password") {
-        //     throw new Error("Cannot access password.");
-        // }
+        // Not implemented yet
 
         return value;
     }
