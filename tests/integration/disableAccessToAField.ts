@@ -12,29 +12,29 @@ import * as request from "supertest";
 
 import { Bunjil, Policy, PolicyCondition, PolicyEffect } from "../../src/index";
 
-test("Can create server with a simple schema, and respond to query", async t => {
+test("Explicit deny should disable access to User::password", async t => {
     const topPostsLimit: number = 10;
 
     const typeDefs: string = `
-      type User {
-        id: ID
-        name: String
-        password: String
-        posts(limit: Int): [Post]
-      }
+    type User {
+      id: ID
+      name: String
+      password: String
+      posts(limit: Int): [Post]
+    }
 
-      type Post {
-        id: ID
-        title: String
-        views: Int
-        author: User
-      }
+    type Post {
+      id: ID
+      title: String
+      views: Int
+      author: User
+    }
 
-      type Query {
-        author(id: ID): User
-        topPosts(limit: Int): [Post]
-      }
-    `;
+    type Query {
+      author(id: ID): User
+      topPosts(limit: Int): [Post]
+    }
+  `;
     const schema = makeExecutableSchema({ typeDefs });
     addMockFunctionsToSchema({
         schema,
@@ -44,13 +44,20 @@ test("Can create server with a simple schema, and respond to query", async t => 
             }),
         },
     });
-    // console.log({ schema });
+
     const policies: Policy[] = [
         {
             id: faker.random.uuid(),
             resources: ["Query::topPosts", "Post::*", "User::*"],
             actions: ["query"],
             effect: PolicyEffect.Allow,
+            roles: ["*"],
+        },
+        {
+            id: faker.random.uuid(),
+            resources: ["User::password"],
+            actions: ["query"],
+            effect: PolicyEffect.Deny,
             roles: ["*"],
         },
     ];
@@ -84,24 +91,26 @@ test("Can create server with a simple schema, and respond to query", async t => 
         .post(endpoints.graphQL)
         .send({
             query: `
-              query getTopPosts {
-                topPosts(limit: ${topPostsLimit}) {
+            query getUsers {
+              topPosts(limit: ${topPostsLimit}) {
+                id
+                title
+                views
+                author {
                   id
-                  title
-                  views
-                  author {
-                    id
-                    name
-                  }
+                  name
+
                 }
               }
-          `,
+            }
+        `,
         });
-    console.debug(res.body.data.topPosts);
+
     t.is(res.status, 200);
-    t.notDeepEqual(res.body.data, {
+    t.deepEqual(res.body.data, {
         topPosts: null,
     });
-    t.is(res.body.data.errors, undefined);
-    t.is(res.body.data.topPosts.length, topPostsLimit);
+    // Expect access denied
+    t.true(Array.isArray(res.body.errors));
+    t.is(res.body.errors[0].message, "Access Denied");
 });
