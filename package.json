@@ -83,6 +83,7 @@
     "@types/winston": "^2.3.8",
     "ava": "^0.25.0",
     "ava-ts": "^0.24.2",
+    "codecov": "^3.0.0",
     "dotenv-cli": "^1.4.0",
     "faker": "^4.1.0",
     "graphql-cli": "2.15.7",
