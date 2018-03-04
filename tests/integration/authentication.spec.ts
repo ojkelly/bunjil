@@ -19,7 +19,7 @@ import {
     AuthenticationCallback,
 } from "../../src/index";
 
-test.only("Can authenticate, and run authenticated query", async t => {
+test("Can authenticate, and run authenticated query", async t => {
     const topPostsLimit: number = 10;
     // This is a test, so security is not really an issue
     // But dont do this in production, use a real random secret
@@ -137,12 +137,6 @@ test.only("Can authenticate, and run authenticated query", async t => {
                 "Query::author",
                 "Post::*",
                 "User::*",
-                "User::id",
-                "User::name",
-                "User::email",
-                // "User::password",
-                "User::roles",
-                "User::posts",
             ],
             actions: ["query"],
             effect: PolicyEffect.Allow,
@@ -182,7 +176,7 @@ test.only("Can authenticate, and run authenticated query", async t => {
         playgroundOptions: {
             enabled: false,
         },
-        debug: true,
+        debug: false,
         endpoints,
         policies,
         // Here is where we add the authentication callback
@@ -209,7 +203,6 @@ test.only("Can authenticate, and run authenticated query", async t => {
           }
       `,
     });
-    console.log(login.body);
 
     // Test the response of the login request
     t.is(login.status, 200);
@@ -238,7 +231,6 @@ test.only("Can authenticate, and run authenticated query", async t => {
                 author {
                   id
                   name
-
                 }
               }
             }
@@ -270,7 +262,8 @@ test.only("Can authenticate, and run authenticated query", async t => {
             }
         `,
         });
-    console.log(passwordRequest.body);
+
+    // This query should succeed but password MUST be null
     t.is(passwordRequest.status, 200);
     t.deepEqual(passwordRequest.body.data, {
         author: {
