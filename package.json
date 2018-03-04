@@ -1,103 +1,57 @@
 {
-  "name": "bunjil",
-  "version": "1.0.1",
-  "description": "A GraphQL bastion server",
-  "license": "MIT",
-  "author": "Owen Kelly <owen@owenkelly.com.au>",
-  "main": "./lib/src/",
-  "typings": "./lib/src/",
+  "name": "bunjil-documentation",
+  "version": "0.0.0",
+  "private": true,
+  "hexo": {
+    "version": "3.6.0"
+  },
   "scripts": {
-    "prisma": "cd examples/simple && dotenv -e ../../.env -- prisma info",
-    "example-simple-debug": "dotenv -- ts-node --inspect-brk examples/simple/src/index.ts",
-    "example-simple-clean": "rimraf examples/simple/src/.graphql/**",
-    "example-simple-init": "yarn example-simple-clean && cd examples/simple && dotenv -e ../../.env -- prisma deploy",
-    "dev": "ava-ts ./tests/**/*.spec.ts --watch",
-    "debug": "DEBUG='wahn:*,bunjil:*' yarn dev",
-    "clean": "rimraf ./lib ./.nyc_output ./coverage",
-    "build": "yarn clean && tsc -p tsconfig.json",
-    "unit": "yarn build && nyc ava",
-    "check-coverage": "nyc check-coverage --lines 50 --functions 70 --branches 60",
-    "test": "yarn unit && yarn check-coverage",
-    "cov": "yarn unit && yarn html-coverage",
-    "html-coverage": "nyc report --reporter=html",
-    "send-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "docs": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out lib/docs && opn lib/docs/index.html",
-    "docs:json": "typedoc --mode file --json lib/docs/typedoc.json src/index.ts",
-    "release-minor": "yarn run build && standard-version --release-as minor",
-    "release-patch": "yarn run build && standard-version --release-as patch",
-    "release-major": "yarn run build && standard-version --sign --release-as major"
-  },
-  "repository": {
-    "type": "github",
-    "url": "https://github.com/ojkelly/bunjil"
-  },
-  "nyc": {
-    "exclude": [
-      "**/*.spec.js",
-      "examples"
-    ]
-  },
-  "ava": {
-    "files": [
-      "lib/**/*.spec.js"
-    ],
-    "source": [
-      "lib/**/*"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "build": "yarn clean && hexo generate && gulp --watch",
+    "clean": "rm -rf ./public",
+    "dev": "hexo server",
+    "eslint": "eslint .",
+    "deploy": "hexo deploy"
   },
   "dependencies": {
-    "@types/debug": "0.0.30",
-    "apollo-engine": "^0.8.10",
-    "apollo-server-koa": "^1.3.2",
-    "bcryptjs": "2.4.3",
-    "debug": "^3.1.0",
-    "graphql": "^0.13.1",
-    "graphql-add-middleware": "^0.1.5",
-    "graphql-binding": "^1.2.5",
-    "graphql-playground-middleware-koa": "^1.4.2",
-    "graphql-tools": "^2.21.0",
-    "graphql-yoga": "1.2.5",
-    "jsonwebtoken": "^8.2.0",
-    "koa": "^2.5.0",
-    "koa-bodyparser": "^4.2.0",
-    "koa-compose": "^4.0.0",
-    "koa-compress": "^2.0.0",
-    "koa-router": "^7.4.0",
-    "memory-cache": "^0.2.0",
-    "prisma-binding": "^1.5.13",
-    "wahn": "^0.9.11",
-    "winston": "^2.4.0"
+    "@types/cheerio": "^0.22.7",
+    "@types/lodash": "^4.14.104",
+    "@types/lunr": "^2.1.5",
+    "cheerio": "^0.20.0",
+    "hexo": "github:hexojs/hexo",
+    "hexo-deployer-git": "^0.3.1",
+    "hexo-generator-archive": "^0.1.4",
+    "hexo-generator-sitemap": "^1.1.2",
+    "hexo-renderer-jade": "^0.4.1",
+    "hexo-renderer-marked": "^0.2.10",
+    "hexo-renderer-stylus": "^0.3.1",
+    "hexo-server": "^0.3.1",
+    "lodash": "^4.5.1",
+    "lunr": "^2.1.2"
   },
   "devDependencies": {
-    "@types/bcryptjs": "2.4.1",
-    "@types/faker": "^4.1.2",
-    "@types/koa": "^2.0.44",
-    "@types/memory-cache": "^0.2.0",
-    "@types/node": "^9.4.6",
-    "@types/supertest": "^2.0.4",
-    "@types/winston": "^2.3.8",
-    "ava": "^0.25.0",
-    "ava-ts": "^0.24.2",
-    "codecov": "^3.0.0",
-    "dotenv-cli": "^1.4.0",
-    "faker": "^4.1.0",
-    "graphql-cli": "2.15.7",
-    "husky": "^0.14.3",
-    "nyc": "^11.4.1",
-    "prisma": "1.3.0",
-    "rimraf": "^2.6.2",
-    "standard-version": "^4.3.0",
-    "supertest": "^3.0.0",
-    "ts-node": "5.0.0",
-    "typescript": "2.7.2",
-    "wedgetail": "^1.0.0"
-  },
-  "resolutions": {
-    "graphql": "0.13.1"
+    "@types/del": "^3.0.0",
+    "@types/eslint": "^4.16.0",
+    "@types/gulp": "^4.0.5",
+    "@types/gulp-cheerio": "0.0.32",
+    "@types/gulp-if": "0.0.33",
+    "@types/gulp-rev": "^5.0.31",
+    "@types/gulp-rev-replace": "^0.2.31",
+    "@types/gulp-uglify": "^3.0.4",
+    "@types/gulp-useref": "^3.0.31",
+    "del": "^3.0.0",
+    "eslint": "^4.3.0",
+    "eslint-config-hexo": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cheerio": "^0.6.2",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-if": "^2.0.0",
+    "gulp-responsive": "^2.8.0",
+    "gulp-rev": "^6.0.1",
+    "gulp-rev-collector": "^1.0.2",
+    "gulp-rev-replace": "^0.4.3",
+    "gulp-uglify": "^1.5.3",
+    "gulp-unique-files": "^0.1.2",
+    "gulp-useref": "^2.1.0",
+    "rename": "^1.0.4"
   }
 }

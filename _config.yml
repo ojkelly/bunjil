@@ -1,0 +1,24 @@
+title: Bunjil
+subtitle: "A GraphQL bastion server"
+description: "A GraphQL bastion server"
+author: Owen Kelly
+language: en
+timezone: UTC
+
+url: https://bunjil.js.org
+root: /
+
+theme: navy
+deploy:
+  type: git
+  repo: git@github.com:ojkelly/bunjil.git#documentation
+
+highlight:
+  enable: true
+  line_number: false
+
+twitter: ojkelly
+github: ojkelly/bunjil
+npm: bunjil
+nodesecurity: orgs/ojkelly/projects/7f441bdb-76ab-4155-aec9-00777b5adc9a
+google_analytics: UA-114507938-1
