@@ -205,6 +205,7 @@ class Bunjil {
             root,
             args,
             context,
+            user: context.user,
             info,
         });
 
@@ -227,6 +228,9 @@ class Bunjil {
                 // By awaiting next here we are passing execution to the resolver hook defined
                 // by the server at runtime
                 const result: Promise<any> = await next();
+
+                // And return the result of the query
+                return result;
             }
             throw new AuthorizationError("Access Denied");
         } catch (err) {
@@ -504,13 +508,7 @@ class Bunjil {
         ctx: Koa.Context,
         next: () => Promise<any>,
     ): Promise<any> {
-        debug(`authenticationCallback: ${JSON.stringify(ctx)}`);
-        // Set a default user on the context
-        // Bunjil's policy setup expects a user on context with at least, id and an array of roles
-        ctx.user = {
-            id: null, // anonymous user has null id
-            roles: ["anonymous"], // only one role for anonymous user
-        };
+        // This should functionally be a no-op as we don't provide any authentication with Bunjil
         await next();
     }
 
@@ -535,13 +533,17 @@ class Bunjil {
                 });
                 if (this.debug) {
                     debug(
-                        JSON.stringify({
-                            type: "authorizationCallback",
-                            action,
-                            resource,
-                            authorization,
-                            user: context.user,
-                        }),
+                        JSON.stringify(
+                            {
+                                type: "authorizationCallback",
+                                action,
+                                resource,
+                                authorization,
+                                user: context.user,
+                            },
+                            null,
+                            4,
+                        ),
                     );
                 }
                 return authorization;

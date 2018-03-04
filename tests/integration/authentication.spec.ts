@@ -136,7 +136,7 @@ test.only("Can authenticate, and run authenticated query", async t => {
                 "Query::topPosts",
                 "Query::author",
                 "Post::*",
-                // "User::*",
+                "User::*",
                 "User::id",
                 "User::name",
                 "User::email",
@@ -154,7 +154,7 @@ test.only("Can authenticate, and run authenticated query", async t => {
             resources: ["Mutation::login", "LoginResponse::token"],
             actions: ["mutation"],
             effect: PolicyEffect.Allow,
-            roles: ["*"],
+            roles: ["anonymous"],
         },
         {
             // Add explicit deny for the password field
@@ -209,6 +209,7 @@ test.only("Can authenticate, and run authenticated query", async t => {
           }
       `,
     });
+    console.log(login.body);
 
     // Test the response of the login request
     t.is(login.status, 200);
