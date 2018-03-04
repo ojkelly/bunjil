@@ -1,7 +1,7 @@
 import { Bunjil } from "./bunjil";
 import {
     BunjilOptions,
-    AuthenticationCallback,
+    AuthenticationMiddleware,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
     playgroundOptions,
@@ -15,7 +15,7 @@ import {
 export {
     Bunjil,
     BunjilOptions,
-    AuthenticationCallback,
+    AuthenticationMiddleware,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
     playgroundOptions,

@@ -31,7 +31,7 @@ import { graphqlKoa } from "./middleware/graphql";
 import { isType } from "./utils";
 import {
     BunjilOptions,
-    AuthenticationCallback,
+    AuthenticationMiddleware,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
     playgroundOptions,
@@ -167,7 +167,7 @@ class Bunjil {
         };
         if (typeof options.hooks !== "undefined") {
             if (typeof options.hooks.authentication === "function") {
-                this.authenticationCallback = options.hooks.authentication;
+                this.authenticationMiddleware = options.hooks.authentication;
             }
             if (typeof options.hooks.authorization === "function") {
                 this.authorizationCallback = options.hooks.authorization;
@@ -279,7 +279,7 @@ class Bunjil {
             // Now we run the authentication middleware
             // This should check for something like an Authentication header, and
             // if it can populate ctx.user with at least an id and an array of roles
-            this.authenticationCallback.bind(this),
+            this.authenticationMiddleware.bind(this),
             // And now we run the actual graphQL query
             // In each resolver we run the authorization callback, against the data we just
             // added to ctx.user
@@ -495,7 +495,7 @@ class Bunjil {
     // [ Hooks ]----------------------------------------------------------------------------------
 
     /**
-     * Default Authentication Callback
+     * Default Authentication Middleware
      *
      * In normal use, this function will never be called, as you should provide your own
      * authentication callback, that integrates with your authentication provider.
@@ -504,7 +504,7 @@ class Bunjil {
      * @param info
      * @param context
      */
-    public async authenticationCallback(
+    public async authenticationMiddleware(
         ctx: Koa.Context,
         next: () => Promise<any>,
     ): Promise<any> {

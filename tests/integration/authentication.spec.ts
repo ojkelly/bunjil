@@ -16,7 +16,7 @@ import {
     Policy,
     PolicyCondition,
     PolicyEffect,
-    AuthenticationCallback,
+    AuthenticationMiddleware,
 } from "../../src/index";
 
 test("Can authenticate, and run authenticated query", async t => {
@@ -99,7 +99,7 @@ test("Can authenticate, and run authenticated query", async t => {
     // This is an example of a simple authentication callback that uses a server signed JWT
     // The important bit is extracting the `id` and an array of `roles` that we put on the
     // ctx.user object.
-    const authenticationCallback: AuthenticationCallback = async (
+    const authenticationCallback: AuthenticationMiddleware = async (
         ctx: Koa.Context,
         next: () => Promise<any>,
     ): Promise<any> => {

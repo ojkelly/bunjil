@@ -51,12 +51,12 @@ type BunjilOptions = {
     policies: Policy[];
 
     hooks?: {
-        authentication?: AuthenticationCallback;
+        authentication?: AuthenticationMiddleware;
         authorization?: AuthorizationCallback;
     };
 };
 
-interface AuthenticationCallback {
+interface AuthenticationMiddleware {
     (ctx: Koa.Context, next: () => Promise<any>): Promise<any>;
 }
 
@@ -71,7 +71,7 @@ interface AuthorizationCallback {
 
 export {
     BunjilOptions,
-    AuthenticationCallback,
+    AuthenticationMiddleware,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
     playgroundOptions,
