@@ -2,8 +2,8 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "outDir": "./.build",
-        "declaration": false,
+        "outDir": "lib",
+        "declaration": true,
         "noImplicitAny": false,
         "removeComments": true,
         "moduleResolution": "node",
@@ -11,10 +11,10 @@
         "sourceMap": true,
         "inlineSources": false,
         "strictNullChecks": true,
-        "watch": true,
+        "watch": false,
         "jsx": "preserve",
         "allowSyntheticDefaultImports": true,
-        "lib": ["esnext"]
+        "lib": ["esnext", "dom"]
     },
     "filesGlob": [
         "typings.d.ts",
