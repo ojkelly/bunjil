@@ -1,3 +1,4 @@
+import * as Koa from "koa";
 import { Policy, PolicyEffect, PolicyCondition } from "wahn";
 import { GraphQLSchema, GraphQLNamedType, GraphQLError } from "graphQL";
 import { GraphQLConfigData } from "graphQL-config";
@@ -50,14 +51,13 @@ type BunjilOptions = {
     policies: Policy[];
 
     hooks?: {
-        authenticationCallback: AuthenticationCallback;
-        authorizationCallback: AuthorizationCallback;
-        sanizationCallback: SantizationCallback<any>;
+        authentication?: AuthenticationCallback;
+        authorization?: AuthorizationCallback;
     };
 };
 
 interface AuthenticationCallback {
-    (args: any, info: any, context: any): void;
+    (ctx: Koa.Context, next: () => Promise<any>): Promise<any>;
 }
 
 type AuthorizationCallbackOptions = {
@@ -68,24 +68,12 @@ type AuthorizationCallbackOptions = {
 interface AuthorizationCallback {
     (AuthorizationCallbackOptions): boolean;
 }
-type SantizationCallbackOptions<Value> = {
-    context: any;
-    field: string;
-    resource: string;
-    returnType: any;
-    value: Value;
-};
-interface SantizationCallback<Value> {
-    (SantizationCallbackOptions): any;
-}
 
 export {
     BunjilOptions,
     AuthenticationCallback,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
-    SantizationCallback,
-    SantizationCallbackOptions,
     playgroundOptions,
     playgroundTheme,
     PlaygroundSettings,

@@ -6,6 +6,8 @@ import { GraphQLOptions } from "apollo-server-core";
 import * as koaCompress from "koa-compress";
 import { addMiddleware } from "graphql-add-middleware";
 import * as cache from "memory-cache";
+import * as debug from "debug";
+
 import {
     mergeSchemas,
     makeExecutableSchema,
@@ -19,12 +21,12 @@ import {
 import * as Koa from "koa";
 import * as KoaRouter from "koa-router";
 import * as KoaBody from "koa-bodyparser";
-import { graphqlKoa, KoaGraphQLOptionsFunction } from "apollo-server-koa";
 import KoaPlaygroundMiddleware from "graphQL-playground-middleware-koa";
 import * as winston from "winston";
 import { Wahn } from "wahn";
 
 import { ResolverError, AuthorizationError } from "./errors";
+import { graphqlKoa } from "./middleware/graphql";
 
 import { isType } from "./utils";
 import {
@@ -32,8 +34,6 @@ import {
     AuthenticationCallback,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
-    SantizationCallback,
-    SantizationCallbackOptions,
     playgroundOptions,
     playgroundTheme,
     PlaygroundSettings,
@@ -42,6 +42,10 @@ import {
     PolicyCondition,
     OnTypeConflictCallback,
 } from "./types";
+
+const info: debug.IDebugger = debug("bunjil:info");
+const log: debug.IDebugger = debug("bunjil:log");
+const warn: debug.IDebugger = debug("bunjil:warn");
 
 // Bunjil
 // Take an existing schema and resolvers
@@ -82,8 +86,6 @@ class Bunjil {
         subscriptions: string | undefined;
         playground: string | undefined;
     };
-
-    // private koaGraphQLOptions: GraphQLOptions | KoaGraphQLOptionsFunction;
 
     // GraphQL properties
 
@@ -164,13 +166,11 @@ class Bunjil {
             },
         };
         if (typeof options.hooks !== "undefined") {
-            if (typeof options.hooks.authenticationCallback === "function") {
-                this.authenticationCallback =
-                    options.hooks.authenticationCallback;
+            if (typeof options.hooks.authentication === "function") {
+                this.authenticationCallback = options.hooks.authentication;
             }
-            if (typeof options.hooks.authorizationCallback === "function") {
-                this.authorizationCallback =
-                    options.hooks.authorizationCallback;
+            if (typeof options.hooks.authorization === "function") {
+                this.authorizationCallback = options.hooks.authorization;
             }
         }
 
@@ -182,6 +182,18 @@ class Bunjil {
         }
     }
 
+    /**
+     * Every resolver added to Bunjil is wrapped by this hook.
+     * This allows up to inject an authorization callback beforehand.
+     * The authentication callback is processed at the start of the request,
+     * bbut not here.
+     *
+     * @param root
+     * @param args
+     * @param context
+     * @param info
+     * @param next
+     */
     private async resolverHook(
         root: any,
         args: any,
@@ -189,13 +201,21 @@ class Bunjil {
         info: any,
         next: any,
     ): Promise<any> {
-        // console.dir({ root, args, context, info, next });
+        log("resolverHook", {
+            root,
+            args,
+            context,
+            info,
+        });
 
-        // construct an ACL name
+        // construct an Resource name
         let resource: string = `${info.parentType.name}:`;
         resource = `${resource}:${info.fieldName}`;
+
+        // Get the action name
         const action: string = info.operation.operation;
 
+        // Attemp to authorize this resolver
         try {
             const authorization: boolean = this.authorizationCallback({
                 action,
@@ -204,23 +224,14 @@ class Bunjil {
             });
 
             if (authorization === true) {
-                // you can modify root, args, context, info
                 // By awaiting next here we are passing execution to the resolver hook defined
                 // by the server at runtime
                 const result: Promise<any> = await next();
-
-                return this.sanitizationCallback({
-                    resource,
-                    field: info.fieldName,
-                    value: result,
-                    context,
-                    returnType: info.returnType,
-                });
             }
             throw new AuthorizationError("Access Denied");
         } catch (err) {
             if (this.debug) {
-                console.debug("bunjil::resolverHook:", err.message, err.stack);
+                debug(`bunjil::resolverHook: ${err.message}, ${err.stack}`);
             }
             throw err;
         }
@@ -233,10 +244,9 @@ class Bunjil {
             throw new Error("Cannot start GraphQL server, schema is undefined");
         }
         // Add the Authentication function to the top level
-        addSchemaLevelResolveFunction(
-            this.graphQL.schema,
-            this.authenticationCallback,
-        );
+        // addSchemaLevelResolveFunction(
+        //     this.graphQL.schema,
+        // );
 
         // Add our resolverHook to every resolver
         addMiddleware(this.graphQL.schema, this.resolverHook.bind(this));
@@ -254,19 +264,29 @@ class Bunjil {
         // Add the graphql POST route
         this.router.post(
             this.endpoints.graphQL,
+            // Set the default anonymous user
+            // Before we run any authentication middleware we need to set the default user
+            // to anonymous. This lets you set a policy with the role `anonymous` to access
+            // things like your login mutation, or public resources.
+            async (ctx: Koa.Context, next: Function) => {
+                ctx.user = { id: null, roles: ["anonymous"] };
+                await next();
+            },
+            // Now we run the authentication middleware
+            // This should check for something like an Authentication header, and
+            // if it can populate ctx.user with at least an id and an array of roles
+            this.authenticationCallback.bind(this),
+            // And now we run the actual graphQL query
+            // In each resolver we run the authorization callback, against the data we just
+            // added to ctx.user
             graphqlKoa({
                 schema: this.graphQL.schema,
                 debug: this.debug,
-                tracing: true,
+                tracing: this.serverConfig.tracing,
                 context: {
                     ...this.graphQL.context,
-                    user: {
-                        id: "cjdbhy691001701374eywgoh6",
-                        roles: ["authenticated user"],
-                    },
                 },
             }),
-            this.sanitizationCallback,
         );
 
         // Add the graphql GET route
@@ -313,10 +333,6 @@ class Bunjil {
         this.koa.use(this.router.allowedMethods());
         // Start Koa
         this.koa.listen(this.serverConfig.port, this.serverConfig.hostname);
-    }
-
-    public resolveAuthCheck(resolver: any): boolean {
-        return true;
     }
 
     /**
@@ -476,23 +492,26 @@ class Bunjil {
 
     /**
      * Default Authentication Callback
+     *
+     * In normal use, this function will never be called, as you should provide your own
+     * authentication callback, that integrates with your authentication provider.
+     *
      * @param args
      * @param info
      * @param context
      */
-    public authenticationCallback(
-        args: any,
-        info: any,
-        context: any,
-    ): Error | void {
-        context.user = {
-            id: null,
-            roles: ["authenticated user"],
+    public async authenticationCallback(
+        ctx: Koa.Context,
+        next: () => Promise<any>,
+    ): Promise<any> {
+        debug(`authenticationCallback: ${JSON.stringify(ctx)}`);
+        // Set a default user on the context
+        // Bunjil's policy setup expects a user on context with at least, id and an array of roles
+        ctx.user = {
+            id: null, // anonymous user has null id
+            roles: ["anonymous"], // only one role for anonymous user
         };
-
-        if (!context.user) {
-            return new Error("Not authenticated");
-        }
+        await next();
     }
 
     /**
@@ -507,7 +526,6 @@ class Bunjil {
         resource,
         context,
     }: AuthorizationCallbackOptions): boolean {
-        // console.log("authorizationCallback", action, resource);
         try {
             if (this.wahn instanceof Wahn) {
                 const authorization: boolean = this.wahn.evaluateAccess({
@@ -516,48 +534,23 @@ class Bunjil {
                     resource,
                 });
                 if (this.debug) {
-                    console.debug({
-                        type: "authorizationCallback",
-                        action,
-                        resource,
-                        authorization,
-                    });
+                    debug(
+                        JSON.stringify({
+                            type: "authorizationCallback",
+                            action,
+                            resource,
+                            authorization,
+                            user: context.user,
+                        }),
+                    );
                 }
                 return authorization;
             }
             throw Error("Error: no policies.");
         } catch (err) {
-            console.debug(err.message);
+            warn(err.message);
             throw err;
         }
-    }
-
-    /**
-     * Called after an upstream GraphQL query is run, but before the result
-     * is returned back to the user.
-     *
-     * This function can be used to sanitize fields before they are returned.
-     * @param resource
-     * @param context
-     */
-    public sanitizationCallback<Value>({
-        context,
-        field,
-        resource,
-        returnType,
-        value,
-    }: SantizationCallbackOptions<Value>): Value | null {
-        // console.log("sna", {
-        //     context,
-        //     field,
-        //     resource,
-        //     returnType,
-        //     value,
-        // });
-
-        // Not implemented yet
-
-        return value;
     }
 }
 
