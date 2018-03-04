@@ -1,3 +1,9 @@
+// Forked from apollo-server-koa
+// https://github.com/apollographql/apollo-server/blob/master/packages/apollo-server-koa/src/koaApollo.ts
+//
+// This is similar, but has a few additions to make authentication and authorization work for
+// Bunjil
+
 import {
     GraphQLOptions,
     HttpQueryError,
