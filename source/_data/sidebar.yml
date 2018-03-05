@@ -2,13 +2,15 @@ docs:
   getting_started:
     overview: index.html
     configuration: configuration.html
-    callback: callback.html
-  integration:
-    typescript: typescript.html
-    ava: ava.html
-    mocha: mocha.html
-    jest: jest.html
-    jasmine: jasmine.html
-    tape: tape.html
   miscellaneous:
+    roadmap: roadmap.html
     contributing: contributing.html
+
+guides:
+  login:
+  restricting_access:
+  prisma:
+
+api:
+  bunjil:
+    
