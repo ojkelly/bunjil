@@ -1,6 +1,7 @@
 docs:
-  getting_started:
+  bunjil:
     overview: index.html
+    getting_started: getting-started.html
     configuration: configuration.html
   miscellaneous:
     roadmap: roadmap.html
@@ -11,6 +12,12 @@ guides:
   restricting_access:
   prisma:
 
+concepts:
+  schema_merging: schema-merging.html
+  authentication: authentication.html
+  authorization: authorization.html
+  caching: caching.html
+
 api:
-  bunjil:
-    
+  bunjil: bunjil.html
+  policy: policy.html

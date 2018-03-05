@@ -14,5 +14,5 @@
       <a href="https://github.com/{{ config.github }}" class="footer-link" target="_blank"><i class="fa fa-github-alt"></i></a>
     </div>
   </div>
-  <div id="footer-made-by">Made by <strong><a href="{{ config.twitter }}">@{{ config.twitter }}</a></strong> with 🖖 in Melbourne, Australia 🇦🇺.</div>
+  <div id="footer-made-by">Made by <strong><a href="https://twitter.com/{{ config.twitter }}">@{{ config.twitter }}</a></strong> with 🖖 in Melbourne, Australia  🇦🇺.</div>
 </footer>

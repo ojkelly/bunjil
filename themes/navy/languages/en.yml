@@ -1,13 +1,12 @@
 menu:
   docs: Docs
   api: API
-  news: News
-  plugins: Plugins
-  themes: Themes
-  search: Search
+  concepts: Concepts
+  guides: Guides
 
 index:
   get_started: Get started
+  roadmap: Roadmap
 
 page:
   contents: Contents
@@ -19,18 +18,25 @@ page:
 
 sidebar:
   docs:
+    bunjil: Bunjil
     getting_started: Getting Started
     overview: Overview
     configuration: Configuration
-    callback: Callback Scope
-    integration: Integration
-    typescript: Typescript
-    ava: AVA
-    mocha: Mocha
-    jest: Jest
-    jasmine: Jasmine
-    tape: Tape
-
+    roadmap: Roadmap
     miscellaneous: Miscellaneous
     troubleshooting: Troubleshooting
     contributing: Contributing
+
+  guides:
+    login: Login
+    restricting_access: Restricting Sccess
+    prisma: Prisma Integration
+
+  concepts:
+    schema_merging: Schema Merging
+    authentication: Authentication
+    authorization: Authorization
+    caching: Caching
+
+  api:
+    bunjil: Bunjil
