@@ -1,7 +1,7 @@
 <footer id="footer" class="wrapper">
   <div class="inner">
     <div id="footer-copyright">
-      &copy; {{ moment(Date.now()).year() }} <a href="https://github.com/ojkelly/wedgetail/graphs/contributors" target="_blank">{{ config.author }}</a><br>
+      &copy; {{ moment(Date.now()).year() }} <a href="https://github.com/{{ config.github }}/graphs/contributors" target="_blank">{{ config.author }}</a><br>
       Documentation and code licensed under MIT.
       <br />
       <br />

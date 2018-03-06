@@ -131,9 +131,7 @@ hexo.extend.helper.register("url_for_lang", function(path) {
 });
 
 hexo.extend.helper.register("raw_link", function(path) {
-  return (
-    "https://github.com/ojkelly/wedgetail/edit/documentation/source/" + path
-  );
+  return "https://github.com/ojkelly/bunjil/edit/documentation/source/" + path;
 });
 
 hexo.extend.helper.register("page_anchor", function(str) {
