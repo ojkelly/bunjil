@@ -98,3 +98,32 @@ You can also use wildcards with roles, but they need to be specified as a role i
 ### Conditions
 
 **Conditions** let you fine tune your policy. For example you may only apply a policy to users of a certain IP range, or a time since their session started.
+
+**Condition**
+
+|Property|Type|Description|
+|---|---|---|
+|`field`|`string`|A dot path to the `key` of the context object to compare, eg `context.request.ip`.|
+|`expected`<br> _(optional)_|Array of `number` or <br> Array of `string`|An array of expected values |
+|`expectedOnContext`<br> _(optional)_|Array of `string`| A dot path to the context object|
+|`operator`|`PolicyOperator`| One of `match`, `notMatch`, `lessThan`, `greaterThan`|
+
+> You must pass either `expected` or `expectedOnContext` if you are adding a condition to a policy.
+
+#### Evaluation Process
+
+If there are multiple `conditions` they are evaluated with a boolean `AND`. Which is to say all conditions must be `true` for the policy to evaluate to `true`.
+
+If there are multiple `expectedValues` or `expectedValuesOnContext` on a condition, they are evaluated with a boolean `OR`. Which is to say, if any of the values match, then the condition outcome is true.
+
+#### Expected Values
+
+**expected**
+If you are passing an array of `expected` values, it must be an array of `strings`, or an array of `numbers`. It cannot be a mix.
+
+If you pass `numbers` then `operator` must be either a numeric operator `PolicyOperator.lessThan` `PolicyOperator.greaterThan`. If your value is a number passed as a string, it's coerced into a `number`.
+
+If you pass `string` then `operator` must be either a string operator `PolicyOperator.match` `PolicyOperator.notMatch`.
+
+**expectedOnContext**
+This must be a dot path to another value on the context object to compare the `field` with.
