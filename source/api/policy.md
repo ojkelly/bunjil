@@ -25,7 +25,10 @@ Every policy needs a unique ID. This is intended for tracing back the results of
 
 ### Resources
 
-A **resource** is a string representation of the current resolver from the root of the GraphQL schema. The top level type is seperated by two colons `::` and all subsequent types are seperated by one colon `:`.
+A **resource** is a string representation of the current resolver from the root of the GraphQL schema.
+
+The top level type is seperated by two colons `::` and all subsequent types are seperated by one
+colon `:`.
 
 If you take the following schema:
 

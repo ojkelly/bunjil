@@ -1,21 +1,27 @@
 docs:
   bunjil:
     overview: index.html
-    getting_started: getting-started.html
-    configuration: configuration.html
+    getting-started: getting-started.html
   miscellaneous:
     roadmap: roadmap.html
     contributing: contributing.html
 
 guides:
-  login:
-  prisma:
+  integration-servers:
+    generic: generic.html
+    prisma: prisma.html
+  authentication:
+    login: login.html
+    auth0: auth0.html
+    passport: passport.html
   policies:
-    restricting_access:
+    login-policy: login-policy.html
+    restricting-access: restricting-access.html
+    conditional-access: conditional-access.html
 
 concepts:
   concepts:
-    schema_merging: schema-merging.html
+    schema-merging: schema-merging.html
     policies: policies.html
     authentication: authentication.html
     authorization: authorization.html

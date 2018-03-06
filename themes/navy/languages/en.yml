@@ -5,21 +5,21 @@ menu:
   guides: Guides
 
 index:
-  get_started: Get started
+  get-started: Get started
   roadmap: Roadmap
 
 page:
   contents: Contents
-  back_to_top: Back to Top
+  back-to-top: Back to Top
   improve: Improve this doc
   prev: Prev
   next: Next
-  last_updated: "Last updated: %s"
+  last-updated: "Last updated: %s"
 
 sidebar:
   docs:
     bunjil: Bunjil
-    getting_started: Getting Started
+    getting-started: Getting Started
     overview: Overview
     configuration: Configuration
     roadmap: Roadmap
@@ -28,13 +28,23 @@ sidebar:
     contributing: Contributing
 
   guides:
-    login: Login
-    restricting_access: Restricting Sccess
-    prisma: Prisma Integration
+    integration-servers: Integrating with GraphQL Servers
+    generic: Generic
+    prisma: Prisma
+    authentication: Authentication
+    login: Simple Login
+    auth0: Auth0
+    passport: Passport.js
+    policies: Policies
+    restricting-access: Restricting Access
+    login-policy: Login Policy
+    conditional-access: Conditional Access
+
 
   concepts:
     concepts: Concepts
-    schema_merging: Schema Merging
+    policies: Policies
+    schema-merging: Schema Merging
     authentication: Authentication
     authorization: Authorization
     caching: Caching
