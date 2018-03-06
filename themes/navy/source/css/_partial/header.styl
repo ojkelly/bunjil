@@ -19,11 +19,15 @@ logo-size = 50px
   flex: 0 logo-size
 
 #logo
-  hide-text()
-  background: url("/logo.png")
-  width: logo-size
-  height: logo-size
-  background-size: @width @height
+  // hide-text()
+  // background: url("/logo.png")
+  // width: logo-size
+  // height: logo-size
+  // background-size: @width @height
+  font-family font-title
+  color: white
+  text-decoration none
+  font-size 1.2em
   display: block
 
 #main-nav
@@ -39,7 +43,7 @@ logo-size = 50px
   line-height: logo-size
   opacity: 0.7
   transition: 0.2s
-  font-family: font-title
+  font-family: font-sans
   display: inline-block
   padding: 0 15px
   &:hover
@@ -63,7 +67,7 @@ logo-size = 50px
 #search-input
   background: none
   font-size: inherit
-  font-family: font-title
+  font-family: font-sans
   color: #fff
   outline: none
   -webkit-appearance: none
@@ -77,7 +81,7 @@ logo-size = 50px
 #lang-select-label
   color: #fff
   opacity: 0.7
-  font-family: font-title
+  font-family: font-sans
   line-height: logo-size
   span
     padding-left: 8px

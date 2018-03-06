@@ -25,8 +25,15 @@ html, body
     height: 100%
     // overflow: hidden
 
+a
+  text-decoration none
+  color color-link
+
+a:hover
+  color color-link-hover
+
 body
-  background: color-accent
+  background: background-gradient
   font-size: font-size
   font-family: font-sans
   color: color-default
@@ -48,6 +55,5 @@ body
 
 #content-wrap
   background: #fff
-  border-top: 1px solid darken(color-accent, 5%)
-  border-bottom: 1px solid darken(color-accent, 5%)
+  box-shadow: 0 0 35px 0px rgba(0,0,0,0.2)
   margin: -1px 0

@@ -2,7 +2,7 @@
   <div class="inner">
     <div id="footer-copyright">
       &copy; {{ moment(Date.now()).year() }} <a href="https://github.com/ojkelly/wedgetail/graphs/contributors" target="_blank">{{ config.author }}</a><br>
-      Documentation licensed under MIT.
+      Documentation and code licensed under MIT.
       <br />
       <br />
       <div class="footer-badges">
