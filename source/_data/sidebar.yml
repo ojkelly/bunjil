@@ -9,14 +9,17 @@ docs:
 
 guides:
   login:
-  restricting_access:
   prisma:
+  policies:
+    restricting_access:
 
 concepts:
-  schema_merging: schema-merging.html
-  authentication: authentication.html
-  authorization: authorization.html
-  caching: caching.html
+  concepts:
+    schema_merging: schema-merging.html
+    policies: policies.html
+    authentication: authentication.html
+    authorization: authorization.html
+    caching: caching.html
 
 api:
   reference:

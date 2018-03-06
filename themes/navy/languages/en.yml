@@ -33,6 +33,7 @@ sidebar:
     prisma: Prisma Integration
 
   concepts:
+    concepts: Concepts
     schema_merging: Schema Merging
     authentication: Authentication
     authorization: Authorization

@@ -1,8 +1,5 @@
-title: Bunjil Reference
+title: Bunjil Class
 ---
-
-
-# Bunjil Class
 
 `import { Bunjil } from 'bunjil';`
 
@@ -30,6 +27,7 @@ Create a new instance by passing an options object detailed below.
 |`hooks`|||
 |`hooks.authentication`|`function`|A `Koa` middleware function that populates `ctx.user` with the authenticated user. <br>**See [Authentication](#Authentication-function)**|
 |`hooks.authorization`|`function`|A hook to allow custom authorization logic. <br> _This overrides the policy engine and is not reccomended unless you require a different authorization method._ <br>**See [Authorization](#Authorization-function)**|
+|`playgroundOptions`||**See [Playground](#Playground)**|
 
 #### Authentication function
 (coming soon)
@@ -67,3 +65,12 @@ The promise will resolve once the server has started.
 ## addContext(key: string, value: any)
 
 With this, you can add anything else to your GraphQL resolver's context at runtime.
+
+## Playground
+
+|Property|Type|Description|
+|---|---|---|
+|`playgroundOptions`|||
+|`~.enabled`|`boolean`||
+|`~.endpoint`|`string`||
+|`~.subscriptionsEndpoint`|`string`|||
