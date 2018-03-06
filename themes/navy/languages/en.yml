@@ -39,5 +39,6 @@ sidebar:
     caching: Caching
 
   api:
+    reference: API Reference
     bunjil: Bunjil
     policy: Policy

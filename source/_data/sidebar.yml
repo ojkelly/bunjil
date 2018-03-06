@@ -19,5 +19,6 @@ concepts:
   caching: caching.html
 
 api:
-  bunjil: bunjil.html
-  policy: policy.html
+  reference:
+    bunjil: bunjil.html
+    policy: policy.html
