@@ -2,5 +2,12 @@ sudo: false
 language: node_js
 node_js:
   - 9.5.0
+
+before_install:
+- yarn install
+
+script:
+- yarn test
+
 after_success:
 - yarn send-coverage
