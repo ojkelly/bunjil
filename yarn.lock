@@ -2396,6 +2396,10 @@ hexo-server@^0.3.1:
     opn "^4.0.0"
     serve-static "^1.10.0"
 
+hexo-tag-bootstrap@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/hexo-tag-bootstrap/-/hexo-tag-bootstrap-0.1.2.tgz#8abd49d1f4b42b846898a74c202207cf84dcdf37"
+
 hexo-util@^0.6.0:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/hexo-util/-/hexo-util-0.6.3.tgz#16a2ade457bef955af0dfd22a3fe6f0a49a9137c"

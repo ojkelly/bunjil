@@ -23,10 +23,9 @@ guides:
 
 concepts:
   concepts:
-    schema-merging: schema-merging.html
-    policies: policies.html
     authentication: authentication.html
     authorization: authorization.html
+    schema-merging: schema-merging.html
     caching: caching.html
 
 api:
