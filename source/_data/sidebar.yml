@@ -7,6 +7,8 @@ docs:
     contributing: contributing.html
 
 guides:
+  schema-merging:
+    generic: schema-merging.html
   integration-servers:
     generic: generic.html
     prisma: prisma.html
