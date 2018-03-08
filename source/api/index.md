@@ -1,7 +1,7 @@
 title: API Reference
 ---
 
-### [Bunjil](api/bunjil.html)
+### [Bunjil](/api/bunjil.html)
 
 The API reference of the Bunjil class.
 
