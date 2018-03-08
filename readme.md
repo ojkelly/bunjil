@@ -1,4 +1,6 @@
 # Bunjil
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fojkelly%2Fbunjil.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fojkelly%2Fbunjil?ref=badge_shield)
+
 
 Bunjil is a public facing GraphQL library/server.
 
@@ -19,3 +21,7 @@ Documentation coming real soon.
 *   [ ] Caching, and caching policies down to the field level
 *   [x] Authentication hook
 *   [x] Authorization hook
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fojkelly%2Fbunjil.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fojkelly%2Fbunjil?ref=badge_large)
