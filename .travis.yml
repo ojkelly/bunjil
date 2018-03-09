@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-  - 9.5.0
+  - 9.9.1
 
 script:
 - yarn test
