@@ -22,6 +22,5 @@
         "./test/**/*.ts",
         "./.graphql/*.ts",
         "./.graphql/*.graphql"
-    ],
-    "exclude": ["node_modules"]
+    ]
 }
