@@ -100,7 +100,7 @@
         "wedgetail": "^1.0.0"
     },
     "resolutions": {
-        "graphql": "0.12.3",
+        "graphql": "0.13.1",
         "ts-node": "5.0.1"
     }
 }
