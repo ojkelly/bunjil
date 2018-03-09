@@ -8,42 +8,44 @@
     "typings": "./lib/src/",
     "scripts": {
         "prisma": "cd examples/simple && dotenv -e ../../.env -- prisma info",
-        "example-simple-debug": "dotenv -- ts-node --inspect-brk examples/simple/src/index.ts",
+        "example-simple-debug":
+            "dotenv -- ts-node --inspect-brk examples/simple/src/index.ts",
         "example-simple-clean": "rimraf examples/simple/src/.graphql/**",
-        "example-simple-init": "yarn example-simple-clean && cd examples/simple && dotenv -e ../../.env -- prisma deploy",
+        "example-simple-init":
+            "yarn example-simple-clean && cd examples/simple && dotenv -e ../../.env -- prisma deploy",
         "dev": "ava-ts ./tests/**/*.spec.ts --watch",
         "debug": "DEBUG='wahn:*,bunjil:*' yarn dev",
         "clean": "rimraf ./lib ./.nyc_output ./coverage",
-        "build": "yarn clean && tsc -p tsconfig.json",
+        "build": "tsc -p tsconfig.json",
         "unit": "yarn build && nyc ava",
-        "check-coverage": "nyc check-coverage --lines 10 --functions 10 --branches 10",
+        "check-coverage":
+            "nyc check-coverage --lines 10 --functions 10 --branches 10",
         "test": "yarn unit && yarn check-coverage",
         "cov": "yarn unit && yarn html-coverage",
         "html-coverage": "nyc report --reporter=html",
-        "send-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-        "docs": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out lib/docs && opn lib/docs/index.html",
-        "docs:json": "typedoc --mode file --json lib/docs/typedoc.json src/index.ts",
-        "release-minor": "yarn run build && standard-version --release-as minor",
-        "release-patch": "yarn run build && standard-version --release-as patch",
-        "release-major": "yarn run build && standard-version --sign --release-as major"
+        "send-coverage":
+            "nyc report --reporter=lcov > coverage.lcov && codecov",
+        "docs":
+            "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out lib/docs && opn lib/docs/index.html",
+        "docs:json":
+            "typedoc --mode file --json lib/docs/typedoc.json src/index.ts",
+        "release-minor":
+            "yarn run build && standard-version --release-as minor",
+        "release-patch":
+            "yarn run build && standard-version --release-as patch",
+        "release-major":
+            "yarn run build && standard-version --sign --release-as major"
     },
     "repository": {
         "type": "github",
         "url": "https://github.com/ojkelly/bunjil"
     },
     "nyc": {
-        "exclude": [
-            "**/*.spec.js",
-            "examples"
-        ]
+        "exclude": ["**/*.spec.js", "examples"]
     },
     "ava": {
-        "files": [
-            "lib/**/*.spec.js"
-        ],
-        "source": [
-            "lib/**/*"
-        ]
+        "files": ["lib/**/*.spec.js"],
+        "source": ["lib/**/*"]
     },
     "husky": {
         "hooks": {
