@@ -3,6 +3,9 @@ title: Authentication
 
 > Authorization: for this request, who is the user
 
+<img alt="Graphic of an ID card" src="/images/16 Employee Tag.svg" class="ux-icon" />
+
+
 While Bunjil ships with a [powerful PBAC authorization engine](/concepts/authorization.html), it does not come with any authentication logic. Authentication can be a tricky thing to get right, and is typically different depending on the project or organization.
 
 Bunjil provides a single middleware for you to process authentication per request. It's expected that you would also add a `login` mutation to your schema.

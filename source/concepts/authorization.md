@@ -3,6 +3,9 @@ title: Authorization
 
 > Authorization: what a user can or cannot do
 
+<img alt="Graphic of a security shield" src="/images/22 Security System Shield Lock.svg" class="ux-icon" />
+
+
 Authorization is a bit different however. For it to work you need to provide roles in the form of  an array of strings on the user object.
 
 For example: `user.roles = [ 'authenticated user', 'editor' ]`, would work.

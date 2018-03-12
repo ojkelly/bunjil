@@ -251,3 +251,45 @@ $article-footer-link
 #comments
   @media print
     display: none
+
+img.ux-icon
+  max-width 30%
+  margin-top -2em
+  float right
+  display block
+
+
+.docs-img-button
+  border 1px solid color-link
+  border-radius 4px
+  display block
+  float left
+  max-width 50%
+  width 47%
+  padding 1% 1% 1em 1%
+  margin: 0.5%
+  text-decoration none
+  text-align center
+  font-family: font-title
+  font-size 2em
+
+    @media mq-tablet
+      float left
+      max-width 90%
+      width 90%
+      padding 1% 1% 1em 1%
+      margin: 0.5%
+
+  &:hover
+    text-decoration none
+    color: color-link-hover
+    border 1px solid lighten(color-link, 20)
+
+    img
+      opacity 1
+
+  img
+    opacity 0.8
+
+.clear
+  clear both

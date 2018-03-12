@@ -1,9 +1,8 @@
 title: Getting Started with Bunjil
 ---
+<img alt="Graphic of construction" src="/images/14 Web Programming Design Construction 2.svg" class="ux-icon" />
 
 It doesn't take long to get setup with Bunjil, but you will need at least 10 minutes. If you want, there will be an example repo linked here soon you can clone.
-
-[If you're not using Typescript, here is the Javascript Getting Started](/docs/getting-started-js.md).
 
 Bunjil is designed to be a bastion GraphQL server. Meaning it's intended to be public facing, and must handle **authentication** and **authorization**.
 
