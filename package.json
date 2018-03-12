@@ -80,7 +80,7 @@
         "koa-router": "^7.4.0",
         "memory-cache": "^0.2.0",
         "prisma-binding": "^1.5.16",
-        "wahn": "^0.9.11",
+        "wahn": "^0.10.0",
         "winston": "^2.4.0"
     },
     "devDependencies": {

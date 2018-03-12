@@ -232,12 +232,15 @@ class Bunjil {
                 // And return the result of the query
                 return result;
             }
-            // throw new AuthorizationError("Access Denied");
+            throw new AuthorizationError("access-denied", "Access Denied");
         } catch (err) {
             if (this.debug) {
                 debug(`bunjil::resolverHook: ${err.message}, ${err.stack}`);
             }
-            throw err;
+            throw new AuthorizationError(
+                err.denyType ? err.denyType : "access-denied",
+                "Access Denied",
+            );
         }
     }
 

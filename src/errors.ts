@@ -8,7 +8,15 @@ class ExtendableError extends Error {
     }
 }
 
-class AuthorizationError extends ExtendableError {}
+class AuthorizationError extends ExtendableError {
+    public name: string = "AuthorizationError";
+    constructor(public denyType: string, public reason: string) {
+        super(reason);
+        this.reason = reason;
+        this.denyType = denyType;
+    }
+}
+
 class ResolverError extends ExtendableError {}
 
 export { AuthorizationError, ResolverError, ExtendableError };
