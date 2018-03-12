@@ -77,7 +77,7 @@ test("Can authenticate, and run authenticated query", async t => {
                             // return the jwt in the token field
                             token: jwt.sign(
                                 { email, roles, name, userId },
-                                jwtSecret, // sign the jwrt with our jwt secret
+                                jwtSecret, // sign the jwt with our jwt secret
                                 {
                                     issuer,
                                 },
@@ -99,7 +99,7 @@ test("Can authenticate, and run authenticated query", async t => {
     // This is an example of a simple authentication callback that uses a server signed JWT
     // The important bit is extracting the `id` and an array of `roles` that we put on the
     // ctx.user object.
-    const authenticationCallback: AuthenticationMiddleware = async (
+    const authenticationMiddleware: AuthenticationMiddleware = async (
         ctx: Koa.Context,
         next: () => Promise<any>,
     ): Promise<any> => {
@@ -181,7 +181,7 @@ test("Can authenticate, and run authenticated query", async t => {
         policies,
         // Here is where we add the authentication callback
         hooks: {
-            authentication: authenticationCallback,
+            authentication: authenticationMiddleware,
         },
     });
 
