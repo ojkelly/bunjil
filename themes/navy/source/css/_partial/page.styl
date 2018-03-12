@@ -260,7 +260,7 @@ img.ux-icon
 
 
 .docs-img-button
-  border 1px solid color-link
+  border 1px solid lighten(color-link, 50)
   border-radius 9px
   display block
   float left
@@ -272,6 +272,7 @@ img.ux-icon
   text-align center
   font-family: font-title
   font-size 2em
+  color lighten(color-link, 50)
 
     @media mq-tablet
       float left
@@ -281,15 +282,15 @@ img.ux-icon
       margin: 0.5%
 
   &:hover
-    text-decoration none
-    color: color-link-hover
+    text-decoration none !important
+    color: color-link !important
     border 1px solid lighten(color-link, 20)
 
     img
       opacity 1
 
   img
-    opacity 0.8
+    opacity 0.6
 
 .clear
   clear both
