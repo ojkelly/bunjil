@@ -18,6 +18,7 @@ Every policy needs a unique ID. This is intended for tracing back the results of
 |---|---|---|
 |`id`|`string`|A unique string describing this policy.|
 |`effect`|`PolicyEffect` or `string`|One of `PolicyEffect.Allow` or `PolicyEffect.Deny` or just a string of `Allow` or `Deny`.|
+|`denyType?`|A `string` returned to the client with `PolicyEffect.Deny`, for example `mfa-required`.|
 |`actions`|Array of `string`|One or more of `query`, `mutation`, `subscription`.|
 |`resources`|Array of `string`|See [resources](#Resources)|
 |`roles`|Array of `string`|An array of roles, see [roles](#Roles)|
