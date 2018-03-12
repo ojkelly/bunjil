@@ -30,13 +30,94 @@ Documentation coming real soon.
 *   [x] Authentication hook
 *   [x] Authorization hook
 
-## License
-
 ## Getting Started
 
 `yarn add bunjil`
 
 `npm install bunjil`
+
+```typescript
+// Import Bunjil and the Policy Types
+import { Bunjil, Policy, PolicyCondition, PolicyEffect } from "bunjil";
+
+// Create a schema
+
+const typeDefs: string = `
+  type User {
+    id: ID
+    name: String
+    password: String
+    posts(limit: Int): [Post]
+  }
+
+  type Post {
+    id: ID
+    title: String
+    views: Int
+    author: User
+  }
+
+  type Query {
+    author(id: ID): User
+    topPosts(limit: Int): [Post]
+  }
+`;
+
+// Resolvers are not shown in this example.
+const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+});
+
+// Create a simple policy allowing public access to the data
+const policies: Policy[] = [
+    {
+        id: "public:read-all",
+        resources: ["Query::topPosts", "Post::*", "User::*"],
+        actions: ["query"],
+        effect: PolicyEffect.Allow,
+        roles: ["*"],
+    },
+    {
+        // Explicitly deny access to the password field.
+        // This will superseed any other policy
+        id: "deny:user::password",
+        resources: ["User::password"],
+        actions: ["query"],
+        effect: PolicyEffect.Deny,
+        roles: ["*"],
+    },
+];
+
+// Create our bunjil server
+const bunjil: Bunjil = new Bunjil({
+    // Server config
+    server: {
+        hostname: `localhost`,
+        protocol: `http`,
+        port: 3000,
+        tracing: true,
+        cacheControl: true,
+    },
+    // Optionally in DEV you can enable the GraphQL playground
+    playgroundOptions: {
+        enabled: false,
+    },
+    // Set the endpoints where GraphQL is available at
+    endpoints: {
+        graphQL: "/graphql",
+        subscriptions: "/graphql/subscriptions",
+        playground: "/playground",
+    },
+    policies,
+});
+
+// Add our schema to the Bunjil instance
+bunjil.addSchema({ schemas: [schema] });
+
+// Now start Bunjil
+await bunjil.start();
+```
 
 ### Usage
 
