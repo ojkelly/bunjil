@@ -1,7 +1,7 @@
 title: Authentication
 ---
 
-> Authorization: for this request, who is the user
+> Authentication: for this request, who is the user
 
 <img alt="Graphic of an ID card" src="/images/16 Employee Tag.svg" class="ux-icon" />
 
