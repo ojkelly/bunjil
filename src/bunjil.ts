@@ -203,35 +203,7 @@ class Bunjil {
         ) {
             this.cache = new Cache();
         }
-        // this.initSchema();
     }
-
-    // private initSchema(): void {
-    //     if (this.cache) {
-    //         const initTypeDefs: string = `
-    //     directive @cacheControl(maxAge: String) on FIELD_DEFINITION | FIELD
-    //     `;
-
-    //         const directiveResolvers: any = {
-    //             cacheControl(next, src, args, context) {
-    //                 console.log({ ...args });
-    //                 return next().then(str => {
-    //                     if (typeof str === "string") {
-    //                         return str.toUpperCase();
-    //                     }
-    //                     return str;
-    //                 });
-    //             },
-    //         };
-
-    //         const schema = makeExecutableSchema({
-    //             typeDefs: initTypeDefs,
-    //             directiveResolvers,
-    //         });
-
-    //         this.graphQL.schema = schema;
-    //     }
-    // }
 
     /**
      * Every resolver added to Bunjil is wrapped by this hook.
