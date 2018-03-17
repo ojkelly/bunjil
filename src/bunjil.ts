@@ -421,6 +421,7 @@ class Bunjil {
         this.koa.on("log", this.logger.info);
 
         // Add the graphQL routes
+        this.logger.debug("Finalising GraphQL routes");
         this.finaliseGraphqlRoutes();
 
         this.koa.use(KoaBody());
@@ -430,8 +431,15 @@ class Bunjil {
         this.koa.use(this.router.routes());
         // Finalise the methods for Koa
         this.koa.use(this.router.allowedMethods());
+
+        this.logger.info("Starting Koa");
         // Start Koa
         this.koa.listen(this.serverConfig.port, this.serverConfig.hostname);
+        this.logger.info(
+            `Bunjil running at ${this.serverConfig.protocol}://${
+                this.serverConfig.hostname
+            }:${this.serverConfig.port}`,
+        );
     }
 
     /**
@@ -523,6 +531,7 @@ class Bunjil {
 
         // Add the new schema
         this.addSchema({ schemas: [schema] });
+        this.logger.debug("Added Prisma schema");
 
         // Add Prisma to the context
         this.addContext(prismaContextKey, prisma);
@@ -558,10 +567,10 @@ class Bunjil {
 
         let schemasToMerge: (GraphQLSchema | string)[];
         if (typeof this.graphQL.schema === "undefined") {
-            this.logger.info("Adding initial schema");
+            this.logger.debug("Added initial schema.");
             schemasToMerge = schemas;
         } else {
-            this.logger.info("Merging schema");
+            this.logger.debug("Merging additional schema.");
             schemasToMerge = [this.graphQL.schema, ...schemas];
         }
 
@@ -581,6 +590,7 @@ class Bunjil {
      * @param value
      */
     public addContext(key: string, value: any): void {
+        this.logger.debug(`Added '${key}' to GraphQL context.`);
         this.graphQL.context = {
             ...this.graphQL.context,
             [key]: value,
