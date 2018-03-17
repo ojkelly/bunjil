@@ -170,8 +170,8 @@ test("Can authenticate, and run authenticated query", async t => {
         server: {
             hostname: `localhost`,
             protocol: `http`,
-            tracing: true,
-            cacheControl: true,
+            tracing: false,
+            cacheControl: false,
         },
         playgroundOptions: {
             enabled: false,

@@ -7,10 +7,12 @@ import * as koaCompress from "koa-compress";
 import { addMiddleware } from "graphql-add-middleware";
 import * as cache from "memory-cache";
 import * as debug from "debug";
-
+import * as hash from "object-hash";
 import {
     mergeSchemas,
     makeExecutableSchema,
+    attachDirectiveResolvers,
+    SchemaDirectiveVisitor,
     addSchemaLevelResolveFunction,
 } from "graphql-tools";
 import {
@@ -27,6 +29,8 @@ import { Wahn } from "wahn";
 
 import { ResolverError, AuthorizationError } from "./errors";
 import { graphqlKoa } from "./middleware/graphql";
+
+import { Cache } from "./cache";
 
 import { isType } from "./utils";
 import {
@@ -80,6 +84,7 @@ class Bunjil {
         port?: number;
         tracing: boolean;
         cacheControl: boolean;
+        disableBunjilCache: boolean;
     };
     public endpoints: {
         graphQL: string;
@@ -100,7 +105,11 @@ class Bunjil {
         };
     };
 
+    // Authorization
     private wahn: Wahn | undefined;
+
+    // Caching
+    private cache: Cache | undefined;
 
     // [ Constructor ]--------------------------------------------------------------------------
 
@@ -148,6 +157,10 @@ class Bunjil {
                 typeof options.server.cacheControl === "boolean"
                     ? options.server.cacheControl
                     : false,
+            disableBunjilCache:
+                typeof options.server.disableBunjilCache === "boolean"
+                    ? options.server.disableBunjilCache
+                    : false,
         };
 
         if (options.server.port) {
@@ -165,6 +178,8 @@ class Bunjil {
                 Subscription: {},
             },
         };
+
+        // Check to see if there are any auth* hooks to monkey patch the defaults with
         if (typeof options.hooks !== "undefined") {
             if (typeof options.hooks.authentication === "function") {
                 this.authenticationMiddleware = options.hooks.authentication;
@@ -179,6 +194,14 @@ class Bunjil {
             this.wahn = new Wahn({
                 policies: options.policies,
             });
+        }
+
+        // If cacheControl is on, setup a cache.
+        if (
+            this.serverConfig.cacheControl === true &&
+            this.serverConfig.disableBunjilCache === false
+        ) {
+            this.cache = new Cache();
         }
     }
 
@@ -207,6 +230,7 @@ class Bunjil {
             context,
             user: context.user,
             info,
+            cacheControl: info.cacheControl,
         });
 
         // construct an Resource name
@@ -216,8 +240,8 @@ class Bunjil {
         // Get the action name
         const action: string = info.operation.operation;
 
-        // Attemp to authorize this resolver
         try {
+            // Attemp to authorize this resolver
             const authorization: boolean = this.authorizationCallback({
                 action,
                 resource,
@@ -225,9 +249,44 @@ class Bunjil {
             });
 
             if (authorization === true) {
-                // By awaiting next here we are passing execution to the resolver hook defined
-                // by the server at runtime
+                let cacheKey: string | undefined = undefined;
+                let cacheTTL: number | undefined = undefined;
+                if (
+                    action === "query" &&
+                    this.cache &&
+                    info &&
+                    info.cacheControl &&
+                    info.cacheControl.cacheHint &&
+                    info.cacheControl.cacheHint.maxAge
+                ) {
+                    cacheKey = `${hash(resource)}:${hash(args)}`;
+                    cacheTTL = info.cacheControl.cacheHint.maxAge;
+
+                    try {
+                        const cachedResult: any | undefined = this.cache.get(
+                            cacheKey,
+                        );
+
+                        if (typeof cachedResult !== "undefined") {
+                            // this is a cache hit
+                            return cachedResult;
+                        }
+                    } catch (cacheErr) {
+                        debug(cacheErr);
+                    }
+                }
+                // Hand off to the graphql resolvers
                 const result: Promise<any> = await next();
+
+                // If the cache is enabled, cache the result
+                if (
+                    action === "query" &&
+                    this.cache &&
+                    typeof cacheKey === "string" &&
+                    typeof cacheTTL === "number"
+                ) {
+                    this.cache.set(cacheKey, result, cacheTTL);
+                }
 
                 // And return the result of the query
                 return result;
@@ -271,6 +330,8 @@ class Bunjil {
         // Add the graphql POST route
         this.router.post(
             this.endpoints.graphQL,
+
+            this.responseCacheMiddleware.bind(this),
             // Set the default anonymous user
             // Before we run any authentication middleware we need to set the default user
             // to anonymous. This lets you set a policy with the role `anonymous` to access
@@ -279,17 +340,20 @@ class Bunjil {
                 ctx.user = { id: null, roles: ["anonymous"] };
                 await next();
             },
+
             // Now we run the authentication middleware
             // This should check for something like an Authentication header, and
             // if it can populate ctx.user with at least an id and an array of roles
             this.authenticationMiddleware.bind(this),
+
             // And now we run the actual graphQL query
             // In each resolver we run the authorization callback, against the data we just
             // added to ctx.user
             graphqlKoa({
                 schema: this.graphQL.schema,
                 debug: this.debug,
-                tracing: this.serverConfig.tracing,
+                // tracing: this.serverConfig.tracing,
+                cacheControl: this.serverConfig.cacheControl,
                 context: {
                     ...this.graphQL.context,
                 },
@@ -329,6 +393,7 @@ class Bunjil {
         this.koa.on("log", this.logger.info);
 
         // Add the graphQL routes
+        this.logger.debug("Finalising GraphQL routes");
         this.finaliseGraphqlRoutes();
 
         this.koa.use(KoaBody());
@@ -338,8 +403,15 @@ class Bunjil {
         this.koa.use(this.router.routes());
         // Finalise the methods for Koa
         this.koa.use(this.router.allowedMethods());
+
+        this.logger.info("Starting Koa");
         // Start Koa
         this.koa.listen(this.serverConfig.port, this.serverConfig.hostname);
+        this.logger.info(
+            `Bunjil running at ${this.serverConfig.protocol}://${
+                this.serverConfig.hostname
+            }:${this.serverConfig.port}`,
+        );
     }
 
     /**
@@ -431,6 +503,7 @@ class Bunjil {
 
         // Add the new schema
         this.addSchema({ schemas: [schema] });
+        this.logger.debug("Added Prisma schema");
 
         // Add Prisma to the context
         this.addContext(prismaContextKey, prisma);
@@ -466,10 +539,10 @@ class Bunjil {
 
         let schemasToMerge: (GraphQLSchema | string)[];
         if (typeof this.graphQL.schema === "undefined") {
-            this.logger.info("Adding initial schema");
+            this.logger.debug("Added initial schema.");
             schemasToMerge = schemas;
         } else {
-            this.logger.info("Merging schema");
+            this.logger.debug("Merging additional schema.");
             schemasToMerge = [this.graphQL.schema, ...schemas];
         }
 
@@ -489,6 +562,7 @@ class Bunjil {
      * @param value
      */
     public addContext(key: string, value: any): void {
+        this.logger.debug(`Added '${key}' to GraphQL context.`);
         this.graphQL.context = {
             ...this.graphQL.context,
             [key]: value,
@@ -556,6 +630,53 @@ class Bunjil {
             warn(err.message);
             throw err;
         }
+    }
+
+    private async responseCacheMiddleware(
+        ctx: any,
+        next: () => Promise<any>,
+    ): Promise<any> {
+        // Check if the request is in the response cache
+        // console.log(ctx.request.body);
+        // let cacheKey: string | undefined = undefined;
+        // let cacheTTL: number | undefined = undefined;
+        // if (this.cache) {
+        //     // TODO check to see if this field should be cached
+        //     // TODO check if we need a size limit here, in case someone can send a
+        //     // reall large request and overwhelm the server
+        //     cacheKey = `${hash(ctx.request.body)}`;
+        //     cacheTTL = 30;
+
+        //     try {
+        //         const cachedResult: any | undefined = this.cache.get(cacheKey);
+
+        //         if (typeof cachedResult !== "undefined") {
+        //             // this is a cache hit
+        //             return cachedResult;
+        //         }
+        //     } catch (cacheErr) {
+        //         debug(cacheErr);
+        //     }
+        // }
+        // Wait for the GraphQL query to resolve
+        await next();
+
+        // If the cache is enabled, cache the result
+        // if (
+        //     this.cache &&
+        //     typeof cacheKey === "string" &&
+        //     typeof cacheTTL === "number"
+        // ) {
+        //     this.cache.set(cacheKey, ctx.response.body.data, cacheTTL);
+        // }
+
+        // if (this.debug === true && typeof this.cache !== "undefined") {
+        //     // If debug is off, and we are using the Bunjil cache,
+        //     // remove cache hints before the response is returned to the client
+        //     // if(response.body)
+        // }
+
+        // console.log({ response: ctx.response });
     }
 }
 

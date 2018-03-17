@@ -8,6 +8,8 @@
 [![NSP Status](https://nodesecurity.io/orgs/ojkelly/projects/7f441bdb-76ab-4155-aec9-00777b5adc9a/badge)](https://nodesecurity.io/orgs/ojkelly/projects/7f441bdb-76ab-4155-aec9-00777b5adc9a)[![Known Vulnerabilities](https://snyk.io/test/npm/bunjil/badge.svg)](https://snyk.io/test/npm/bunjil)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fojkelly%2Fbunjil.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fojkelly%2Fbunjil?ref=badge_shield)
 
+[bunjil.js.org](https://bunjil.js.org) | [Getting Started](https://bunjil.js.org/docs/getting-started)
+
 Bunjil is a public facing GraphQL server.
 
 It comes with Policy Based authorization, and hook for your own authentication (Passport.js, Auth0, database).
@@ -20,7 +22,7 @@ Documentation coming real soon.
 
 # Roadmap
 
-*   [ ] Documentation
+*   [in progress] Documentation
 *   [x] Merge multiple GraphQL schemas into one public schema
 *   [ ] Ability to hide Types
 *   [ ] Ability to hide fields (masking)

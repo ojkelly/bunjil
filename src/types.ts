@@ -37,7 +37,13 @@ type BunjilOptions = {
         hostname: string;
         port?: number;
         tracing?: boolean | undefined;
+
+        // Enable the Apollo Cache Control directives, and the Bunjil cache
         cacheControl?: boolean | undefined;
+
+        // Set to true to disable Bunjil's cache, useful when cacheControl is true, as it lets you
+        // use Apollo Engine's caching.
+        disableBunjilCache?: boolean | undefined;
     };
 
     // GraphQL
