@@ -279,15 +279,16 @@ class Bunjil {
             if (authorization === true) {
                 let cacheKey: string | undefined = undefined;
                 let cacheTTL: number | undefined = undefined;
-                if (this.cache) {
-                    console.log({
-                        resource,
-                        info,
-                    });
-
-                    // TODO check to see if this field should be cached
+                if (
+                    action === "query" &&
+                    this.cache &&
+                    info &&
+                    info.cacheControl &&
+                    info.cacheControl.cacheHint &&
+                    info.cacheControl.cacheHint.maxAge
+                ) {
                     cacheKey = `${hash(resource)}:${hash(args)}`;
-                    cacheTTL = 30;
+                    cacheTTL = info.cacheControl.cacheHint.maxAge;
 
                     try {
                         const cachedResult: any | undefined = this.cache.get(
@@ -307,6 +308,7 @@ class Bunjil {
 
                 // If the cache is enabled, cache the result
                 if (
+                    action === "query" &&
                     this.cache &&
                     typeof cacheKey === "string" &&
                     typeof cacheTTL === "number"
@@ -322,7 +324,6 @@ class Bunjil {
             if (this.debug) {
                 debug(`bunjil::resolverHook: ${err.message}, ${err.stack}`);
             }
-            console.debug(`bunjil::resolverHook: ${err.message}, ${err.stack}`);
             throw new AuthorizationError(
                 err.denyType ? err.denyType : "access-denied",
                 "Access Denied",
@@ -380,7 +381,7 @@ class Bunjil {
                 schema: this.graphQL.schema,
                 debug: this.debug,
                 // tracing: this.serverConfig.tracing,
-                // cacheControl: this.serverConfig.cacheControl,
+                cacheControl: this.serverConfig.cacheControl,
                 context: {
                     ...this.graphQL.context,
                 },
