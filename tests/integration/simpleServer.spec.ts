@@ -66,8 +66,8 @@ test("Can create server with a simple schema, and respond to query", async t => 
         server: {
             hostname: `localhost`,
             protocol: `http`,
-            tracing: true,
-            cacheControl: true,
+            tracing: false,
+            cacheControl: false,
         },
         playgroundOptions: {
             enabled: false,
@@ -173,8 +173,8 @@ test("Performance of simple query with policy", async t => {
         server: {
             hostname: `localhost`,
             protocol: `http`,
-            tracing: true,
-            cacheControl: true,
+            tracing: false,
+            cacheControl: false,
         },
         playgroundOptions: {
             enabled: false,
