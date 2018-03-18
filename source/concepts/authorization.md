@@ -9,6 +9,8 @@ In Bunjil authorization is implemented via a Policy engine. Every resolver is wr
 
 By using a policy engine, Bunjil keeps your authorization logic in one place. This makes both defining policies and reasoning about them easier.
 
+<br>
+
 > The authorization engine in powered by another module called `wahn`. It's a general purpose Policy Based Access Control library. It was written for Bunjil, and has been implemented in Bunjil to suit the nature of GraphQL.
 
 > You may also want to look at the [Policy Reference](/api/policy.html), for detail on how a policy is constructed.

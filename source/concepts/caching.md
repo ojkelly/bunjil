@@ -7,11 +7,13 @@ Bunjil implements resolver level caching, by adhering to the same `cacheControl`
 
 This is possible because the underlying GraphQL server implementation is `apollo-server`, which comes with `apollo-cache-control`.
 
+<br>
+
 > Bunjil's cache is in beta. It works, but it hasn't had enough production use to understand any edge-cases. If you find one please [file a ticket](https://github.com/ojkelly/bunjil/issues/new).
 
 ## Schema Directives
 
-### `@cacheControl`
+`@cacheControl`
 
 |Argument|Type|Description|
 |---|---|---|
