@@ -267,6 +267,17 @@ class Bunjil {
                     info.cacheControl.cacheHint.maxAge
                 ) {
                     cacheKey = `${hash(resource)}:${hash(args)}`;
+
+                    // If scope is private, scope the cacheKey to this user
+                    // only
+                    if (
+                        info.cacheControl.cacheHint.scope &&
+                        info.cacheControl.cacheHint.scope === "PRIVATE" &&
+                        context.user.id !== null
+                    ) {
+                        cacheKey = `${cacheKey}:${context.user.id}`;
+                    }
+
                     cacheTTL = info.cacheControl.cacheHint.maxAge;
 
                     try {
