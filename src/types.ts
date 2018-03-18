@@ -44,6 +44,14 @@ type BunjilOptions = {
         // Set to true to disable Bunjil's cache, useful when cacheControl is true, as it lets you
         // use Apollo Engine's caching.
         disableBunjilCache?: boolean | undefined;
+
+        // Enable to print information regarding the cacheability for use
+        // with Apollo Engine
+        useApolloCache?: boolean | undefined;
+
+        // Enable to print tracing data for use
+        // with Apollo Engine
+        useApolloTracing?: boolean | undefined;
     };
 
     // GraphQL

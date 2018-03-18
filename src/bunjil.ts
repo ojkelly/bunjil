@@ -5,16 +5,9 @@ import { FragmentReplacements } from "graphql-binding/dist/types";
 import { GraphQLOptions } from "apollo-server-core";
 import * as koaCompress from "koa-compress";
 import { addMiddleware } from "graphql-add-middleware";
-import * as cache from "memory-cache";
 import * as debug from "debug";
 import * as hash from "object-hash";
-import {
-    mergeSchemas,
-    makeExecutableSchema,
-    attachDirectiveResolvers,
-    SchemaDirectiveVisitor,
-    addSchemaLevelResolveFunction,
-} from "graphql-tools";
+import { mergeSchemas, makeExecutableSchema } from "graphql-tools";
 import {
     IResolvers,
     MergeInfo,
@@ -80,7 +73,10 @@ class Bunjil {
         tracing: boolean;
         cacheControl: boolean;
         disableBunjilCache: boolean;
+        useApolloCache: boolean;
+        useApolloTracing: boolean;
     };
+
     public endpoints: {
         graphQL: string;
         subscriptions: string | undefined;
@@ -159,6 +155,14 @@ class Bunjil {
             disableBunjilCache:
                 typeof options.server.disableBunjilCache === "boolean"
                     ? options.server.disableBunjilCache
+                    : false,
+            useApolloCache:
+                typeof options.server.useApolloCache === "boolean"
+                    ? options.server.useApolloCache
+                    : false,
+            useApolloTracing:
+                typeof options.server.useApolloTracing === "boolean"
+                    ? options.server.useApolloTracing
                     : false,
         };
 
@@ -312,14 +316,11 @@ class Bunjil {
         if (typeof this.graphQL.schema === "undefined") {
             throw new Error("Cannot start GraphQL server, schema is undefined");
         }
-        // Add the Authentication function to the top level
-        // addSchemaLevelResolveFunction(
-        //     this.graphQL.schema,
-        // );
 
         // Add our resolverHook to every resolver
         addMiddleware(this.graphQL.schema, this.resolverHook.bind(this));
     }
+
     /**
      * Add our graphQL endpoints to Koa
      */
@@ -334,7 +335,7 @@ class Bunjil {
         this.router.post(
             this.endpoints.graphQL,
 
-            this.responseCacheMiddleware.bind(this),
+            this.sanitiseMiddleware.bind(this),
             // Set the default anonymous user
             // Before we run any authentication middleware we need to set the default user
             // to anonymous. This lets you set a policy with the role `anonymous` to access
@@ -390,7 +391,6 @@ class Bunjil {
 
     /**
      * Prepare the GraphQL routes, and star the Koa server
-     * @param callback
      */
     public async start(): Promise<void> {
         this.koa.on("log", this.logger.info);
@@ -421,10 +421,6 @@ class Bunjil {
      * Add a resolver that use forwardsTo, and
      * point it to the location in context where
      * it is being forwarded to.
-     *
-     * @param resolver
-     * @param forwardToKey The key passed in via addContext, for where to forward this
-     * reoslver to
      */
     private addForwardedResolver(resolver: any, forwardToKey: string): any {
         return forwardTo(forwardToKey);
@@ -560,9 +556,6 @@ class Bunjil {
     /**
      * Add a value to the context object passed into the
      * GraphQL query, at the location of key
-     *
-     * @param key
-     * @param value
      */
     public addContext(key: string, value: any): void {
         this.logger.debug(`Added '${key}' to GraphQL context.`);
@@ -579,25 +572,17 @@ class Bunjil {
      *
      * In normal use, this function will never be called, as you should provide your own
      * authentication callback, that integrates with your authentication provider.
-     *
-     * @param args
-     * @param info
-     * @param context
      */
     public async authenticationMiddleware(
         ctx: Koa.Context,
         next: () => Promise<any>,
     ): Promise<any> {
-        // This should functionally be a no-op as we don't provide any authentication with Bunjil
         await next();
     }
 
     /**
      * Run before a resolver calls upstream, used to verify
      * the current user has access to the field and operation
-     *
-     * TODO Cache authorization resolves, so we only need to lookup once
-     * @param options
      */
     public authorizationCallback({
         action,
@@ -644,51 +629,40 @@ class Bunjil {
         }
     }
 
-    private async responseCacheMiddleware(
+    /**
+     * Sanitisation Middleware
+     *
+     * This is run as the last middleware before the response is returned.
+     */
+    private async sanitiseMiddleware(
         ctx: any,
         next: () => Promise<any>,
     ): Promise<any> {
-        // Check if the request is in the response cache
-        // console.log(ctx.request.body);
-        // let cacheKey: string | undefined = undefined;
-        // let cacheTTL: number | undefined = undefined;
-        // if (this.cache) {
-        //     // TODO check to see if this field should be cached
-        //     // TODO check if we need a size limit here, in case someone can send a
-        //     // reall large request and overwhelm the server
-        //     cacheKey = `${hash(ctx.request.body)}`;
-        //     cacheTTL = 30;
-
-        //     try {
-        //         const cachedResult: any | undefined = this.cache.get(cacheKey);
-
-        //         if (typeof cachedResult !== "undefined") {
-        //             // this is a cache hit
-        //             return cachedResult;
-        //         }
-        //     } catch (cacheErr) {
-        //         debug(cacheErr);
-        //     }
-        // }
         // Wait for the GraphQL query to resolve
         await next();
 
-        // If the cache is enabled, cache the result
-        // if (
-        //     this.cache &&
-        //     typeof cacheKey === "string" &&
-        //     typeof cacheTTL === "number"
-        // ) {
-        //     this.cache.set(cacheKey, ctx.response.body.data, cacheTTL);
-        // }
-
-        // if (this.debug === true && typeof this.cache !== "undefined") {
-        //     // If debug is off, and we are using the Bunjil cache,
-        //     // remove cache hints before the response is returned to the client
-        //     // if(response.body)
-        // }
-
-        // console.log({ response: ctx.response });
+        // Remove caching and or tracing information if there isn't
+        // going to be an Apollo Engine proxy in front
+        if (
+            this.serverConfig.useApolloCache === false ||
+            this.serverConfig.useApolloTracing === false
+        ) {
+            const body: any = JSON.parse(ctx.response.body);
+            const sanitisedBody = {
+                data: body.data,
+                errors: body.errors,
+                extensions: {
+                    ...body.extensions,
+                    cacheControl: this.serverConfig.useApolloCache
+                        ? body.extensions.cacheControl
+                        : undefined,
+                    tracing: this.serverConfig.useApolloTracing
+                        ? body.extensions.tracing
+                        : undefined,
+                },
+            };
+            ctx.body = JSON.stringify(sanitisedBody);
+        }
     }
 }
 
