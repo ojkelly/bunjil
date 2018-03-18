@@ -114,6 +114,36 @@ You can also use wildcards with roles, but they need to be specified as a role i
 
 > You must pass either `expected` or `expectedOnContext` if you are adding a condition to a policy.
 
+#### The `context` object
+
+Both `field` and `expectedOnContext` refer to a `context` object that is passed by Bunjil on every authorization check.
+
+The context object is constructed as follows:
+
+```typescript
+const context: any = {
+    // We destructure(expand) the GraphQL resolver `context` object
+    ...context,
+
+    // If no user was added during authentication (for example if auth failed)
+    // then a default anonymous user is added with an id of `null` and a role
+    // of `anonymous user`
+    user: {
+      id: 'string',
+      roles: ["an array", "of strings", "authenticated user"]
+    }
+
+    // We also add the GraphQL resolver `root` object
+    root,
+
+    // We also add the GraphQL request `args` object
+    args,
+},
+```
+
+You can use `expectedOnContext` to compare against anything else on the `context` object.
+
+
 #### Evaluation Process
 
 If there are multiple `conditions` they are evaluated with a boolean `AND`. Which is to say all conditions must be `true` for the policy to evaluate to `true`.

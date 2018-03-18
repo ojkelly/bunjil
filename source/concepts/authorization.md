@@ -5,12 +5,11 @@ title: Authorization
 
 <img alt="Graphic of a security shield" src="/images/22 Security System Shield Lock.svg" class="ux-icon" />
 
+In Bunjil authorization is implemented via a Policy engine. Every resolver is wrapped with another resolver by Bunjil. This new wrapping resolver implements both authorization and caching.
 
-Authorization is a bit different however. For it to work you need to provide roles in the form of  an array of strings on the user object.
+By using a policy engine, Bunjil keeps your authorization logic in one place. This makes both defining policies and reasoning about them easier.
 
-For example: `user.roles = [ 'authenticated user', 'editor' ]`, would work.
-
-The authorization engine in powered by another module called `wahn`. It's a general purpose Policy Based Access Control library. It was written for Bunjil, and has been implemented in Bunjil to suit the nature of GraphQL.
+> The authorization engine in powered by another module called `wahn`. It's a general purpose Policy Based Access Control library. It was written for Bunjil, and has been implemented in Bunjil to suit the nature of GraphQL.
 
 > You may also want to look at the [Policy Reference](/api/policy.html), for detail on how a policy is constructed.
 
