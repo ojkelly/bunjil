@@ -47,22 +47,17 @@ import {
     OnTypeConflictCallback,
 } from "./types";
 
+// Setup debugging
 const info: debug.IDebugger = debug("bunjil:info");
 const log: debug.IDebugger = debug("bunjil:log");
 const warn: debug.IDebugger = debug("bunjil:warn");
-
-// Bunjil
-// Take an existing schema and resolvers
-// Wrap everthing in an authentication and authorization function
-// Allow you to replace both typeDefs and resolvers
-// You can implement unauth'd resolvers, by overriding them and forwardTo
 
 /**
  * Bunjil
  *
  * A public facing GraphQL server
  *
- * TODO: Add subscriptions
+ * TODO: Add/Test subscriptions
  */
 class Bunjil {
     // [ Properties ]--------------------------------------------------------------------------
@@ -128,7 +123,10 @@ class Bunjil {
                 this.debug === true ? [new winston.transports.Console()] : [],
         });
 
+        // Add any plargoundOptions
         this.playgroundOptions = options.playgroundOptions;
+
+        // Add the GraphQL Endpoints
         if (
             typeof options.endpoints !== "undefined" &&
             typeof options.endpoints.graphQL === "string"
@@ -141,10 +139,11 @@ class Bunjil {
             throw new Error("options.endpoints.graphQL is required");
         }
 
-        // Put koa somewhere
+        // Initialise Koa and its router
         this.koa = new Koa();
         this.router = new KoaRouter();
 
+        // Setup the serverConfig
         this.serverConfig = {
             ...options.server,
             protocol: options.server.protocol,
@@ -224,14 +223,14 @@ class Bunjil {
         info: any,
         next: any,
     ): Promise<any> {
-        log("resolverHook", {
-            root,
-            args,
-            context,
-            user: context.user,
-            info,
-            cacheControl: info.cacheControl,
-        });
+        // log("resolverHook", {
+        //     root,
+        //     args,
+        //     context,
+        //     user: context.user,
+        //     info,
+        //     cacheControl: info.cacheControl,
+        // });
 
         // construct an Resource name
         let resource: string = `${info.parentType.name}:`;
@@ -245,8 +244,13 @@ class Bunjil {
             const authorization: boolean = this.authorizationCallback({
                 action,
                 resource,
-                context,
+                context: {
+                    ...context,
+                    root,
+                    args,
+                },
             });
+            console.log({ resource, authorization });
 
             if (authorization === true) {
                 let cacheKey: string | undefined = undefined;
@@ -404,10 +408,10 @@ class Bunjil {
         // Finalise the methods for Koa
         this.koa.use(this.router.allowedMethods());
 
-        this.logger.info("Starting Koa");
+        this.logger.debug("Starting Koa");
         // Start Koa
         this.koa.listen(this.serverConfig.port, this.serverConfig.hostname);
-        this.logger.info(
+        this.logger.debug(
             `Bunjil running at ${this.serverConfig.protocol}://${
                 this.serverConfig.hostname
             }:${this.serverConfig.port}`,
@@ -601,6 +605,12 @@ class Bunjil {
         resource,
         context,
     }: AuthorizationCallbackOptions): boolean {
+        log("authorizationCallback", {
+            action,
+            resource,
+            context,
+        });
+
         try {
             if (this.wahn instanceof Wahn) {
                 const authorization: boolean = this.wahn.evaluateAccess({
@@ -617,6 +627,7 @@ class Bunjil {
                                 resource,
                                 authorization,
                                 user: context.user,
+                                context,
                             },
                             null,
                             4,
@@ -627,7 +638,7 @@ class Bunjil {
             }
             throw Error("Error: no policies.");
         } catch (err) {
-            warn(err.message);
+            warn(err.message, err.stack);
             throw err;
         }
     }

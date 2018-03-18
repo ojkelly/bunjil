@@ -9,6 +9,7 @@ import {
     PlaygroundSettings,
     Policy,
     PolicyEffect,
+    PolicyOperator,
     PolicyCondition,
 } from "./types";
 
@@ -23,5 +24,6 @@ export {
     PlaygroundSettings,
     Policy,
     PolicyEffect,
+    PolicyOperator,
     PolicyCondition,
 };

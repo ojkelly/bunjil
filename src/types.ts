@@ -1,5 +1,5 @@
 import * as Koa from "koa";
-import { Policy, PolicyEffect, PolicyCondition } from "wahn";
+import { Policy, PolicyEffect, PolicyCondition, PolicyOperator } from "wahn";
 import { GraphQLSchema, GraphQLNamedType, GraphQLError } from "graphQL";
 import { GraphQLConfigData } from "graphQL-config";
 
@@ -85,6 +85,7 @@ export {
     PlaygroundSettings,
     Policy,
     PolicyEffect,
+    PolicyOperator,
     PolicyCondition,
     OnTypeConflictCallback,
 };
