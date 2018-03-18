@@ -398,7 +398,7 @@ test.only("Restrict access to a type based on userId", async t => {
         {
             // Allow access to fields only by authenticated users
             id: faker.random.uuid(),
-            resources: ["Query::*"],
+            resources: ["Query::*", "User::*"],
             actions: ["query"],
             effect: PolicyEffect.Allow,
             roles,
@@ -423,12 +423,12 @@ test.only("Restrict access to a type based on userId", async t => {
             id: faker.random.uuid(),
             resources: ["User::*"],
             actions: ["query"],
-            effect: PolicyEffect.Allow,
+            effect: PolicyEffect.Deny,
             roles: ["*"],
             conditions: [
                 {
                     field: "user.userId",
-                    operator: PolicyOperator.match,
+                    operator: PolicyOperator.notMatch,
                     expectedOnContext: ["root.id"],
                 } as PolicyCondition,
             ],
@@ -533,5 +533,5 @@ test.only("Restrict access to a type based on userId", async t => {
       `,
         });
     console.log("getAnotherUser", JSON.stringify(getAnotherUser.body, null, 4));
-    t.is(getAnotherUser.status, 400);
+    t.is(getAnotherUser.status, 200);
 });

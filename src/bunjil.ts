@@ -250,7 +250,6 @@ class Bunjil {
                     args,
                 },
             });
-            console.log({ resource, authorization });
 
             if (authorization === true) {
                 let cacheKey: string | undefined = undefined;
