@@ -2,6 +2,7 @@ title: Documentation
 ---
 Welcome to the Bunjil documentation. If you encounter any problems when using Bunjil, have a look at the  [troubleshooting guide](troubleshooting.html), raise an issue on [GitHub](https://github.com/ojkelly/bunjil/issues).
 
+Bunjil's goal is to be a safe, secure bastion server for your public GraphQL api, whether it's a database wrapper or multiple upstream GraphQL servers..
 
 <a href="/docs/getting-started.html" class="docs-img-button">
   <img src="/images/14 Web Programming Design Construction 2.svg">
