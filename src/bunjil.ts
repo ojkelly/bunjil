@@ -637,7 +637,9 @@ class Bunjil {
             }
             throw Error("Error: no policies.");
         } catch (err) {
-            warn(err.message, err.stack);
+            if (this.debug) {
+                warn(err.message, err.stack);
+            }
             throw err;
         }
     }

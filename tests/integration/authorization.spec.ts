@@ -282,7 +282,7 @@ test("Can authenticate, and run authorized query", async t => {
  * a comparison of the context (ie userId) and the returned information from the resolver
  * (ie, userId on the Post type).
  */
-test.only("Restrict access to a type based on userId", async t => {
+test("Restrict access to a type based on userId", async t => {
     // This is a test, so security is not really an issue
     // But dont do this in production, use a real random secret
     const jwtSecret = faker.random.uuid();
@@ -305,6 +305,7 @@ test.only("Restrict access to a type based on userId", async t => {
   }
   type Mutation {
     login(email: String, password: String): LoginResponse
+    updatePassword(id: ID, password: String): User
   }
 `;
 
@@ -342,7 +343,7 @@ test.only("Restrict access to a type based on userId", async t => {
                 },
             }),
             User: (root: any, args: any, context: any, info: any) => {
-                console.log({ root, args, context });
+                // This is just mimicking a database lookup
                 if (args.id === userId) {
                     return {
                         id: userId,
@@ -399,7 +400,7 @@ test.only("Restrict access to a type based on userId", async t => {
             // Allow access to fields only by authenticated users
             id: faker.random.uuid(),
             resources: ["Query::*", "User::*"],
-            actions: ["query"],
+            actions: ["query", "mutation"],
             effect: PolicyEffect.Allow,
             roles,
         },
@@ -415,14 +416,14 @@ test.only("Restrict access to a type based on userId", async t => {
             // Add explicit deny for the password field
             id: faker.random.uuid(),
             resources: ["User::password"],
-            actions: ["query"],
+            actions: ["*"],
             effect: PolicyEffect.Deny,
             roles: ["*"],
         },
         {
             id: faker.random.uuid(),
             resources: ["User::*"],
-            actions: ["query"],
+            actions: ["*"],
             effect: PolicyEffect.Deny,
             roles: ["*"],
             conditions: [
@@ -430,6 +431,20 @@ test.only("Restrict access to a type based on userId", async t => {
                     field: "user.userId",
                     operator: PolicyOperator.notMatch,
                     expectedOnContext: ["root.id"],
+                } as PolicyCondition,
+            ],
+        },
+        {
+            id: faker.random.uuid(),
+            resources: ["Mutation::updatePassword"],
+            actions: ["mutation"],
+            effect: PolicyEffect.Allow,
+            roles: ["*"],
+            conditions: [
+                {
+                    field: "user.userId",
+                    operator: PolicyOperator.match,
+                    expectedOnContext: ["args.id"],
                 } as PolicyCondition,
             ],
         },
@@ -451,7 +466,7 @@ test.only("Restrict access to a type based on userId", async t => {
         playgroundOptions: {
             enabled: false,
         },
-        debug: true,
+        debug: false,
         endpoints,
         policies,
         // Here is where we add the authentication callback
@@ -507,7 +522,7 @@ test.only("Restrict access to a type based on userId", async t => {
           }
       `,
         });
-    console.log("getCurrentUser", JSON.stringify(getCurrentUser.body, null, 4));
+
     t.is(getCurrentUser.status, 200);
     t.deepEqual(getCurrentUser.body.data, {
         User: {
@@ -532,6 +547,39 @@ test.only("Restrict access to a type based on userId", async t => {
           }
       `,
         });
-    console.log("getAnotherUser", JSON.stringify(getAnotherUser.body, null, 4));
+
     t.is(getAnotherUser.status, 200);
+
+    // Update own password
+    const updateMyPassword = await server
+        .post(endpoints.graphQL)
+        .set("Authorization", `Bearer: ${authorizationToken}`)
+        .send({
+            query: `
+              mutation updateMyPassword {
+                updatePassword(id: "${userId}", password: "${password}") {
+                    id
+                    name
+                    email
+                }
+              }
+          `,
+        });
+    t.is(updateMyPassword.status, 200);
+
+    const updateSomeoneElsesPassword = await server
+        .post(endpoints.graphQL)
+        .set("Authorization", `Bearer: ${authorizationToken}`)
+        .send({
+            query: `
+              mutation updateMyPassword {
+                updatePassword(id: "${faker.random.uuid()}", password: "${password}") {
+                    id
+                    name
+                    email
+                }
+              }
+          `,
+        });
+    t.is(updateSomeoneElsesPassword.status, 200);
 });
