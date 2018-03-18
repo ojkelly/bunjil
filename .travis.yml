@@ -8,7 +8,7 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
 
 script:
-- ls
+- yarn test
 - yarn build
 - cat yarn-error.log
 
