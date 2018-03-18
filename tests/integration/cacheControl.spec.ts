@@ -243,5 +243,4 @@ test("Can cache individual fields", async t => {
         `,
     });
     t.deepEqual(res.body.data, res2.body.data);
-    console.log("repsonse", JSON.stringify(res2.body, null, 4));
 });
