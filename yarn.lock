@@ -302,9 +302,9 @@ anymatch@^1.3.0:
     micromatch "^2.1.5"
     normalize-path "^2.0.0"
 
-apollo-cache-control@^0.0.x, "apollo-cache-control@git+ssh://git@github.com/apollographql/apollo-cache-control-js.git#0264da1":
+apollo-cache-control@^0.0.x, "apollo-cache-control@git+https://git@github.com/apollographql/apollo-cache-control-js.git#0264da1":
   version "0.0.9"
-  resolved "git+ssh://git@github.com/apollographql/apollo-cache-control-js.git#0264da1719d6adebc285c1de30ed81a4ee2f4b16"
+  resolved "git+https://git@github.com/apollographql/apollo-cache-control-js.git#0264da1719d6adebc285c1de30ed81a4ee2f4b16"
   dependencies:
     graphql-extensions "^0.0.x"
 
@@ -3268,11 +3268,11 @@ graphql-tools@^2.23.1:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql@0.12.3, "graphql@^0.11.0 || ^0.12.0 || ^0.13.0", graphql@^0.12.3, graphql@^0.13.0, graphql@^0.13.1:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.12.3.tgz#11668458bbe28261c0dcb6e265f515ba79f6ce07"
+graphql@0.13.2, "graphql@^0.11.0 || ^0.12.0 || ^0.13.0", graphql@^0.12.3, graphql@^0.13.0, graphql@^0.13.1:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.13.2.tgz#4c740ae3c222823e7004096f832e7b93b2108270"
   dependencies:
-    iterall "1.1.3"
+    iterall "^1.2.1"
 
 handlebars@^4.0.2, handlebars@^4.0.3:
   version "4.0.11"
@@ -3973,10 +3973,6 @@ isurl@^1.0.0-alpha5:
   dependencies:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
-
-iterall@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
 
 iterall@1.2.2, iterall@^1.1.3, iterall@^1.2.1:
   version "1.2.2"
