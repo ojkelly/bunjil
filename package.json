@@ -60,7 +60,7 @@
         "@types/node-cache": "^4.1.1",
         "@types/winston": "^2.3.8",
         "apollo-cache-control":
-            "git+ssh://git@github.com/apollographql/apollo-cache-control-js.git#0264da1",
+            "git://git@github.com/apollographql/apollo-cache-control-js.git#0264da1",
         "apollo-engine": "^1.0.2",
         "apollo-errors": "^1.7.1",
         "apollo-server-koa": "^1.3.2",
