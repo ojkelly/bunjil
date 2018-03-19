@@ -2,8 +2,6 @@ title: Getting Started with Bunjil
 ---
 <img alt="Graphic of construction" src="/images/14 Web Programming Design Construction 2.svg" class="ux-icon" />
 
-It doesn't take long to get setup with Bunjil, but you will need at least 10 minutes. If you want, there will be an example repo linked here soon you can clone.
-
 Bunjil is designed to be a bastion GraphQL server. Meaning it's intended to be public facing, and must handle **authentication** and **authorization**.
 
 With authentication we take the opinion, that you should be able to bring your own. So Bunjil has very few opinions on how authentication should be handled. All you need to do is provide a hook that can decode something on the incoming `Koa.Request` and populate a user object. This can be as simple as decoding a `JWT`, or quering a session storage backend.
