@@ -1,5 +1,5 @@
-import { GraphQLSchema, GraphQLNamedType, GraphQLError } from "graphQL";
-import { GraphQLConfigData } from "graphQL-config";
+import { GraphQLSchema, GraphQLNamedType, GraphQLError } from "graphql";
+import { GraphQLConfigData } from "graphql-config";
 import { Prisma, extractFragmentReplacements, forwardTo } from "prisma-binding";
 import { FragmentReplacements } from "graphql-binding/dist/types";
 import { GraphQLOptions } from "apollo-server-core";
@@ -16,7 +16,7 @@ import {
 import * as Koa from "koa";
 import * as KoaRouter from "koa-router";
 import * as KoaBody from "koa-bodyparser";
-import KoaPlaygroundMiddleware from "graphQL-playground-middleware-koa";
+import KoaPlaygroundMiddleware from "graphql-playground-middleware-koa";
 import * as winston from "winston";
 import { Wahn } from "wahn";
 

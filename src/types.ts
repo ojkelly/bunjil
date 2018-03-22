@@ -1,7 +1,7 @@
 import * as Koa from "koa";
 import { Policy, PolicyEffect, PolicyCondition, PolicyOperator } from "wahn";
-import { GraphQLSchema, GraphQLNamedType, GraphQLError } from "graphQL";
-import { GraphQLConfigData } from "graphQL-config";
+import { GraphQLSchema, GraphQLNamedType, GraphQLError } from "graphql";
+import { GraphQLConfigData } from "graphql-config";
 
 interface OnTypeConflictCallback {
     (left: GraphQLNamedType, right: GraphQLNamedType): GraphQLNamedType;
