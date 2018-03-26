@@ -62,8 +62,6 @@ test("Can merge schemas, and mask a type", async t => {
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: false,
         },

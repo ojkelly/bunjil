@@ -66,8 +66,6 @@ test("Can cache top level queries", async t => {
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: true,
         },
@@ -181,8 +179,6 @@ test("Can cache individual fields", async t => {
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: true,
         },

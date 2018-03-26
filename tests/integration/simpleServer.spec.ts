@@ -64,8 +64,6 @@ test("Can create server with a simple schema, and respond to query", async t => 
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: false,
         },
@@ -171,8 +169,6 @@ test("Performance of simple query with policy", async t => {
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: false,
         },

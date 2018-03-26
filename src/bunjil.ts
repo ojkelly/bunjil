@@ -67,8 +67,6 @@ class Bunjil {
     public koa: Koa;
     private router: KoaRouter;
     public serverConfig: {
-        protocol: string;
-        hostname: string;
         port?: number;
         tracing: boolean;
         cacheControl: boolean;
@@ -142,8 +140,6 @@ class Bunjil {
         // Setup the serverConfig
         this.serverConfig = {
             ...options.server,
-            protocol: options.server.protocol,
-            hostname: options.server.hostname,
             tracing:
                 typeof options.server.tracing === "boolean"
                     ? options.server.tracing
@@ -389,9 +385,7 @@ class Bunjil {
         if (this.playgroundOptions.enabled) {
             const playgroundOptions: playgroundOptions = {
                 ...this.playgroundOptions,
-                endpoint: `${this.serverConfig.protocol}://${
-                    this.serverConfig.hostname
-                }:${this.serverConfig.port}${this.endpoints.graphQL}`,
+                endpoint: this.endpoints.graphQL,
             };
             this.router.get(
                 this.endpoints.playground,
@@ -420,11 +414,9 @@ class Bunjil {
 
         this.logger.debug("Starting Koa");
         // Start Koa
-        this.koa.listen(this.serverConfig.port, this.serverConfig.hostname);
+        this.koa.listen(this.serverConfig.port);
         this.logger.debug(
-            `Bunjil running at ${this.serverConfig.protocol}://${
-                this.serverConfig.hostname
-            }:${this.serverConfig.port}`,
+            `Bunjil running at port ${this.serverConfig.port}`,
         );
     }
 
