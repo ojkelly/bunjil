@@ -1,6 +1,6 @@
 {
   "name": "bunjil",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A GraphQL bastion server",
   "license": "MIT",
   "author": "Owen Kelly <owen@owenkelly.com.au>",
