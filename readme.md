@@ -95,8 +95,6 @@ const policies: Policy[] = [
 const bunjil: Bunjil = new Bunjil({
     // Server config
     server: {
-        hostname: `localhost`,
-        protocol: `http`,
         port: 3000,
         tracing: true,
         cacheControl: true,
@@ -125,7 +123,7 @@ await bunjil.start();
 
 ## Running the tests
 
-Use `yarn tests` or `npm run tests`.
+Use `yarn test` or `npm run test`.
 
 Tests are written with `ava`, and we would strongly like tests with any new functionality.
 
