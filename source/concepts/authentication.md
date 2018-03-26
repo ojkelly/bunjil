@@ -75,9 +75,6 @@ const authenticationMiddleware: AuthenticationMiddleware = async (
 // Now we need to pass the authenitcation Middleware to Bunjil before it starts
 const bunjil: Bunjil = new Bunjil({
     server: {
-        hostname: `example.com`,
-        // In production you should have a load balancer terminating https for you
-        protocol: `http`,
         port: 80,
         tracing: true,
         cacheControl: true,

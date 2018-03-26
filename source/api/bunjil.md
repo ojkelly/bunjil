@@ -14,12 +14,10 @@ Create a new instance by passing an options object detailed below.
 |---|---|---|
 |`debug`|`boolean`|`true` in your dev environment, but **never in production**|
 |`server`|||
-|`server.protocol`|`string`|Typically either `http` or `https` |
-|`server.hostname`|`string`|Probably `localhost` for dev and `example.com` (your actual domain) for production|
 |`server.port`|`number`|The port to bind on. _(Technically optional to support unit/integration tests, but you need it in normal use)_.|
 |`server.tracing` <br> _(optional)_ <br> Default: `false`|`boolean` `undefined`|`true` if you want to enable tracing on the underlying `apollo-server`|
 |`server.cacheControl` <br> _(optional)_ <br> Default: `false`|`boolean` `undefined`|`true` if you want to enable tracing on the underlying `apollo-server`. |
-|`endpoints` | Preceding slash **required**.|Constructed as `{server.protocol}://{server.hostname}:{server.port}{endpoint.*}`|
+|`endpoints` | Preceding slash **required**.||
 |`endpoints.graphQL`|`string`|Typically `/graphql`, this is the location where the GraphQL api is served from.|
 |`endpoints.graphQL`|`subscriptions`|Typically `/graphql`, this is the location where the GraphQL subscriptions api is served from.|
 |`endpoints.graphQL`|`playground`|Typically `/graphql`, this is the location where the GraphQL playground is served from.|

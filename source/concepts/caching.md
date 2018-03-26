@@ -39,8 +39,6 @@ import { Bunjil } from 'bunjil';
 
 const bunjil: Bunjil = new Bunjil({
     server: {
-        hostname: `localhost`,
-        protocol: `http`,
         port: 80,
         tracing: false,
         // Enable cacheControl directive and Bunjil cache

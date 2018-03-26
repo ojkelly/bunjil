@@ -73,8 +73,6 @@ const policies: Policy[] = [
 const bunjil: Bunjil = new Bunjil({
     // Server config
     server: {
-        hostname: `localhost`,
-        protocol: `http`,
         port: 3000,
         tracing: true,
         cacheControl: true,
