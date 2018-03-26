@@ -33,8 +33,6 @@ type BunjilOptions = {
 
     // Koa
     server: {
-        protocol: string;
-        hostname: string;
         port?: number;
         tracing?: boolean | undefined;
 

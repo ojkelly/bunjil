@@ -169,8 +169,6 @@ test("Can authenticate, and run authorized query", async t => {
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: false,
         },
@@ -458,8 +456,6 @@ test("Restrict access to a type based on userId", async t => {
 
     const bunjil: Bunjil = new Bunjil({
         server: {
-            hostname: `localhost`,
-            protocol: `http`,
             tracing: false,
             cacheControl: false,
         },
