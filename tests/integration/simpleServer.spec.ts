@@ -111,12 +111,12 @@ test("Performance of simple query with policy", async t => {
     const allowedPerformance: Timings = {
         high: 10,
         low: 0.02,
-        average: 0.2,
+        average: 0.5,
         percentiles: {
             ninetyNinth: 0.09,
-            ninetyFifth: 0.03,
-            ninetieth: 0.028,
-            tenth: 0.015,
+            ninetyFifth: 0.05,
+            ninetieth: 0.04,
+            tenth: 0.02,
         },
     };
     const topPostsLimit: number = 10;
