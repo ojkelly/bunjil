@@ -382,7 +382,10 @@ class Bunjil {
         );
 
         // Optionally add the playground
-        if (this.playgroundOptions.enabled) {
+        if (
+            this.playgroundOptions.enabled &&
+            typeof this.endpoints.playground === "string"
+        ) {
             const playgroundOptions: playgroundOptions = {
                 ...this.playgroundOptions,
                 endpoint: this.endpoints.graphQL,
@@ -415,9 +418,7 @@ class Bunjil {
         this.logger.debug("Starting Koa");
         // Start Koa
         this.koa.listen(this.serverConfig.port);
-        this.logger.debug(
-            `Bunjil running at port ${this.serverConfig.port}`,
-        );
+        this.logger.debug(`Bunjil running at port ${this.serverConfig.port}`);
     }
 
     /**
