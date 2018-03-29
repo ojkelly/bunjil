@@ -122,7 +122,7 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/faker@^4.1.2":
+"@types/faker@4.1.2":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@types/faker/-/faker-4.1.2.tgz#f8ab50c9f9af68c160dd71b63f83e24b712d0df5"
 
@@ -181,7 +181,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/supertest@^2.0.4":
+"@types/supertest@2.0.4":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.4.tgz#28770e13293365e240a842d7d5c5a1b3d2dee593"
   dependencies:
@@ -302,7 +302,13 @@ anymatch@^1.3.0:
     micromatch "^2.1.5"
     normalize-path "^2.0.0"
 
-apollo-cache-control@^0.0.x, "apollo-cache-control@git+https://git@github.com/apollographql/apollo-cache-control-js.git#0264da1":
+apollo-cache-control@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.1.0.tgz#0c7c9abc312dea3a60e1cb70e0869df2cd970688"
+  dependencies:
+    graphql-extensions "^0.0.x"
+
+apollo-cache-control@^0.0.x:
   version "0.0.9"
   resolved "git+https://git@github.com/apollographql/apollo-cache-control-js.git#0264da1719d6adebc285c1de30ed81a4ee2f4b16"
   dependencies:
@@ -5345,9 +5351,9 @@ prisma-binding@^1.5.16:
     jsonwebtoken "^8.1.0"
     subscriptions-transport-ws "0.9.6"
 
-prisma-cli-core@1.0.27:
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/prisma-cli-core/-/prisma-cli-core-1.0.27.tgz#fc159ed9f3b55418ce3b122cd8119f967ebc98ec"
+prisma-cli-core@1.0.28:
+  version "1.0.28"
+  resolved "https://registry.yarnpkg.com/prisma-cli-core/-/prisma-cli-core-1.0.28.tgz#0a9e45962abd500fbd6d309748d7d6029afbab97"
   dependencies:
     adm-zip "^0.4.7"
     archiver "^2.0.3"
@@ -5378,7 +5384,7 @@ prisma-cli-core@1.0.27:
     pause "^0.1.0"
     portfinder "^1.0.13"
     prisma-json-schema "^0.0.1"
-    prisma-yml "1.0.36"
+    prisma-yml "1.0.37"
     scuid "^1.0.2"
     semver "^5.4.1"
     sillyname "^0.1.0"
@@ -5387,9 +5393,9 @@ prisma-cli-core@1.0.27:
     util.promisify "^1.0.0"
     validator "^8.2.0"
 
-prisma-cli-engine@1.0.25:
-  version "1.0.25"
-  resolved "https://registry.yarnpkg.com/prisma-cli-engine/-/prisma-cli-engine-1.0.25.tgz#40b878b78b0c2b47f48dab67d68128eef5bd1fae"
+prisma-cli-engine@1.0.26:
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/prisma-cli-engine/-/prisma-cli-engine-1.0.26.tgz#8995e374073149b6c9a7bbdf4b89e71810bc6f64"
   dependencies:
     "@heroku/linewrap" "^1.0.0"
     ajv "5"
@@ -5431,7 +5437,7 @@ prisma-cli-engine@1.0.25:
     memfs "^2.5.3"
     opn "^5.1.0"
     prisma-json-schema "^0.0.1"
-    prisma-yml "1.0.36"
+    prisma-yml "1.0.37"
     raven "2.3.0"
     replaceall "^0.1.6"
     rwlockfile "^1.4.8"
@@ -5472,9 +5478,9 @@ prisma-yml@1.0.28:
     scuid "^1.0.2"
     yaml-ast-parser "^0.0.40"
 
-prisma-yml@1.0.36:
-  version "1.0.36"
-  resolved "https://registry.yarnpkg.com/prisma-yml/-/prisma-yml-1.0.36.tgz#3105ae151a2df775fa5713181e45912d2d0085de"
+prisma-yml@1.0.37:
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/prisma-yml/-/prisma-yml-1.0.37.tgz#c1155550f64964f985a451cfa270da90074dcb10"
   dependencies:
     ajv "5"
     bluebird "^3.5.1"
@@ -5493,13 +5499,13 @@ prisma-yml@1.0.36:
     scuid "^1.0.2"
     yaml-ast-parser "^0.0.40"
 
-prisma@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/prisma/-/prisma-1.4.1.tgz#90f6bcee6d2f3b29fad7c8c697faf5cfcc509a02"
+prisma@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-1.4.2.tgz#015d643eb4e85b8de53e4dea550e8e5d4d1b7c9d"
   dependencies:
     fs-extra "^5.0.0"
-    prisma-cli-core "1.0.27"
-    prisma-cli-engine "1.0.25"
+    prisma-cli-core "1.0.28"
+    prisma-cli-engine "1.0.26"
     semver "^5.4.1"
     source-map-support "^0.4.18"
 

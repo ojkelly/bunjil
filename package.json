@@ -1,105 +1,107 @@
 {
-  "name": "bunjil",
-  "version": "1.0.5",
-  "description": "A GraphQL bastion server",
-  "license": "MIT",
-  "author": "Owen Kelly <owen@owenkelly.com.au>",
-  "main": "./lib/src/",
-  "typings": "./lib/src/",
-  "scripts": {
-    "prisma": "cd examples/simple && dotenv -e ../../.env -- prisma info",
-    "example-simple-debug": "dotenv -- ts-node --inspect-brk examples/simple/src/index.ts",
-    "example-simple-clean": "rimraf examples/simple/src/.graphql/**",
-    "example-simple-init": "yarn example-simple-clean && cd examples/simple && dotenv -e ../../.env -- prisma deploy",
-    "dev": "ava-ts ./tests/**/*.spec.ts --watch",
-    "debug": "DEBUG='wahn:*,bunjil:*' yarn dev",
-    "clean": "rimraf ./lib ./.nyc_output ./coverage",
-    "build": "tsc -p tsconfig.json",
-    "unit": "nyc ava",
-    "check-coverage": "nyc check-coverage --lines 10 --functions 10 --branches 10",
-    "test": "yarn unit && yarn check-coverage",
-    "cov": "yarn unit && yarn html-coverage",
-    "html-coverage": "nyc report --reporter=html",
-    "send-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "docs": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out lib/docs && opn lib/docs/index.html",
-    "docs:json": "typedoc --mode file --json lib/docs/typedoc.json src/index.ts",
-    "release-minor": "yarn run build && standard-version --release-as minor",
-    "release-patch": "yarn run build && standard-version --release-as patch",
-    "release-major": "yarn run build && standard-version --sign --release-as major"
-  },
-  "repository": {
-    "type": "github",
-    "url": "https://github.com/ojkelly/bunjil"
-  },
-  "nyc": {
-    "exclude": [
-      "**/*.spec.js",
-      "examples"
-    ]
-  },
-  "ava": {
-    "files": [
-      "lib/**/*.spec.js"
-    ],
-    "source": [
-      "lib/**/*"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
+    "name": "bunjil",
+    "version": "1.0.5",
+    "description": "A GraphQL bastion server",
+    "license": "MIT",
+    "author": "Owen Kelly <owen@owenkelly.com.au>",
+    "main": "./lib/src/",
+    "typings": "./lib/src/",
+    "scripts": {
+        "prisma": "cd examples/simple && dotenv -e ../../.env -- prisma info",
+        "example-simple-debug":
+            "dotenv -- ts-node --inspect-brk examples/simple/src/index.ts",
+        "example-simple-clean": "rimraf examples/simple/src/.graphql/**",
+        "example-simple-init":
+            "yarn example-simple-clean && cd examples/simple && dotenv -e ../../.env -- prisma deploy",
+        "dev": "ava-ts ./tests/**/*.spec.ts --watch",
+        "debug": "DEBUG='wahn:*,bunjil:*' yarn dev",
+        "clean": "rimraf ./lib ./.nyc_output ./coverage",
+        "build": "tsc -p tsconfig.json",
+        "unit": "nyc ava",
+        "check-coverage":
+            "nyc check-coverage --lines 10 --functions 10 --branches 10",
+        "test": "yarn unit && yarn check-coverage",
+        "cov": "yarn unit && yarn html-coverage",
+        "html-coverage": "nyc report --reporter=html",
+        "send-coverage":
+            "nyc report --reporter=lcov > coverage.lcov && codecov",
+        "docs":
+            "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out lib/docs && opn lib/docs/index.html",
+        "docs:json":
+            "typedoc --mode file --json lib/docs/typedoc.json src/index.ts",
+        "release-minor":
+            "yarn run build && standard-version --release-as minor",
+        "release-patch":
+            "yarn run build && standard-version --release-as patch",
+        "release-major":
+            "yarn run build && standard-version --sign --release-as major"
+    },
+    "repository": {
+        "type": "github",
+        "url": "https://github.com/ojkelly/bunjil"
+    },
+    "nyc": {
+        "exclude": ["**/*.spec.js", "examples"]
+    },
+    "ava": {
+        "files": ["lib/**/*.spec.js"],
+        "source": ["lib/**/*"]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
+    },
+    "dependencies": {
+        "@types/debug": "0.0.30",
+        "@types/graphql": "^0.12.3",
+        "@types/koa": "^2.0.44",
+        "@types/node": "^9.4.7",
+        "@types/node-cache": "^4.1.1",
+        "@types/winston": "^2.3.8",
+        "apollo-cache-control": "0.1.0",
+        "apollo-engine": "^1.0.2",
+        "apollo-errors": "^1.7.1",
+        "apollo-server-koa": "^1.3.2",
+        "debug": "^3.1.0",
+        "graphql": "0.13.2",
+        "graphql-add-middleware": "^0.1.5",
+        "graphql-binding": "^1.2.5",
+        "graphql-playground-middleware-koa": "^1.4.2",
+        "graphql-tools": "^2.23.1",
+        "jsonwebtoken": "^8.2.0",
+        "koa": "^2.5.0",
+        "koa-bodyparser": "^4.2.0",
+        "koa-compose": "^4.0.0",
+        "koa-compress": "^2.0.0",
+        "koa-router": "^7.4.0",
+        "node-cache": "^4.1.1",
+        "object-hash": "^1.3.0",
+        "prisma-binding": "^1.5.16",
+        "wahn": "^0.10.0",
+        "winston": "^2.4.1"
+    },
+    "devDependencies": {
+        "@types/faker": "4.1.2",
+        "@types/supertest": "2.0.4",
+        "ava": "0.25.0",
+        "ava-ts": "0.24.2",
+        "codecov": "3.0.0",
+        "dotenv-cli": "1.4.0",
+        "faker": "4.1.0",
+        "graphql-cli": "2.15.8",
+        "husky": "0.14.3",
+        "nyc": "11.6.0",
+        "prisma": "1.4.2",
+        "rimraf": "2.6.2",
+        "standard-version": "4.3.0",
+        "supertest": "3.0.0",
+        "ts-node": "5.0.1",
+        "typescript": "2.7.2",
+        "wedgetail": "1.0.0"
+    },
+    "resolutions": {
+        "graphql": "0.13.2",
+        "ts-node": "5.0.1"
     }
-  },
-  "dependencies": {
-    "@types/debug": "0.0.30",
-    "@types/graphql": "^0.12.3",
-    "@types/koa": "^2.0.44",
-    "@types/node": "^9.4.7",
-    "@types/node-cache": "^4.1.1",
-    "@types/winston": "^2.3.8",
-    "apollo-cache-control": "git+https://git@github.com/apollographql/apollo-cache-control-js.git#0264da1",
-    "apollo-engine": "^1.0.2",
-    "apollo-errors": "^1.7.1",
-    "apollo-server-koa": "^1.3.2",
-    "debug": "^3.1.0",
-    "graphql": "0.13.2",
-    "graphql-add-middleware": "^0.1.5",
-    "graphql-binding": "^1.2.5",
-    "graphql-playground-middleware-koa": "^1.4.2",
-    "graphql-tools": "^2.23.1",
-    "jsonwebtoken": "^8.2.0",
-    "koa": "^2.5.0",
-    "koa-bodyparser": "^4.2.0",
-    "koa-compose": "^4.0.0",
-    "koa-compress": "^2.0.0",
-    "koa-router": "^7.4.0",
-    "node-cache": "^4.1.1",
-    "object-hash": "^1.3.0",
-    "prisma-binding": "^1.5.16",
-    "wahn": "^0.10.0",
-    "winston": "^2.4.1"
-  },
-  "devDependencies": {
-    "@types/faker": "4.1.2",
-    "@types/supertest": "2.0.4",
-    "ava": "0.25.0",
-    "ava-ts": "0.24.2",
-    "codecov": "3.0.0",
-    "dotenv-cli": "1.4.0",
-    "faker": "4.1.0",
-    "graphql-cli": "2.15.8",
-    "husky": "0.14.3",
-    "nyc": "11.6.0",
-    "prisma": "1.4.2",
-    "rimraf": "2.6.2",
-    "standard-version": "4.3.0",
-    "supertest": "3.0.0",
-    "ts-node": "5.0.1",
-    "typescript": "2.7.2",
-    "wedgetail": "1.0.0"
-  },
-  "resolutions": {
-    "graphql": "0.13.2",
-    "ts-node": "5.0.1"
-  }
 }
