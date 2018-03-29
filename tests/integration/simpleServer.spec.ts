@@ -109,7 +109,7 @@ test("Performance of simple query with policy", async t => {
     const numOfTimedFunctionCalls: number = 50000;
 
     const allowedPerformance: Timings = {
-        high: 10,
+        high: 20,
         low: 0.02,
         average: 0.5,
         percentiles: {
