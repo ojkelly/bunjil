@@ -1,7 +1,7 @@
 # Bunjil
 
-[![View on npm](https://img.shields.io/npm/v/bunjil.svg)](https://npmjs.org/packages/bunjil)
-[![npm downloads](https://img.shields.io/npm/dm/bunjil.svg)](https://npmjs.org/packages/bunjil)
+[![View on npm](https://img.shields.io/npm/v/bunjil.svg)](https://npmjs.org/package/bunjil)
+[![npm downloads](https://img.shields.io/npm/dm/bunjil.svg)](https://npmjs.org/package/bunjil)
 [![Dependencies](https://img.shields.io/david/ojkelly/bunjil.svg)](https://david-dm.org/ojkelly/bunjil)
 [![Build Status](https://travis-ci.org/ojkelly/bunjil.svg?branch=master)](https://travis-ci.org/ojkelly/bunjil)
 [![codecov](https://codecov.io/gh/ojkelly/bunjil/branch/master/graph/badge.svg)](https://codecov.io/gh/ojkelly/bunjil)
