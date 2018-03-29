@@ -1,6 +1,6 @@
-<a href="https://npmjs.org/packages/{{ config.npm }}" rel="nofollow"><img alt="View on npm" src="https://img.shields.io/npm/v/{{ config.npm }}.svg" style="max-width:100%;"></a>
+<a href="https://npmjs.org/package/{{ config.npm }}" rel="nofollow"><img alt="View on npm" src="https://img.shields.io/npm/v/{{ config.npm }}.svg" style="max-width:100%;"></a>
 &nbsp;
-<a href="https://npmjs.org/packages/{{ config.npm }}" rel="nofollow"><img alt="npm downloads" src="https://img.shields.io/npm/dm/{{ config.npm }}.svg" style="max-width:100%;"></a>
+<a href="https://npmjs.org/package/{{ config.npm }}" rel="nofollow"><img alt="npm downloads" src="https://img.shields.io/npm/dm/{{ config.npm }}.svg" style="max-width:100%;"></a>
 &nbsp;
 <a href="https://travis-ci.org/{{ config.github }}" rel="nofollow"><img alt="Build Status" src="https://travis-ci.org/{{ config.github }}.svg?branch=master" style="max-width:100%;"></a>
 
