@@ -42,12 +42,3 @@ It's then up to the PBAC library, in this case [wahn](https://www.npm.org/packag
 Before the server is started we pass in an array of `Policy` objects. These are JSON objects. There are types available to make writing them easier with Typescript. You could also write them as plain JSON.
 
 The policies themselves are described in detail in the [Policy Reference](/api/policy.html).
-
-
-## Guides
-
-*(To be written, soon)*
-- How to grant access to a whole type, or a single field
-- How to deny access to a single field, while granting access to the rest of the type
-- How to deny a request based on a field on the request object
-- How to deny access to a mutation based on the time since the sesion was started

@@ -95,10 +95,3 @@ const bunjil: Bunjil = new Bunjil({
 });
 
 ```
-
-### Guides
-*(To be written, soon)*
-
-  -  How to use simple jwt login
-  -  How to integrate with Auth0
-  -  How to use passport.js
