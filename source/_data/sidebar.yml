@@ -13,9 +13,7 @@ guides:
     generic: generic.html
     prisma: prisma.html
   authentication:
-    login: login.html
     auth0: auth0.html
-    passport: passport.html
   policies:
     login-policy: login-policy.html
     restricting-access: restricting-access.html
