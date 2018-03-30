@@ -1,0 +1,27 @@
+type Query {
+    viewer: User
+    topPosts(limit: Int): [Post]
+}
+
+type User {
+    id: String
+    email: String
+    givenName: String
+    name: String
+}
+
+type Post {
+    id: ID
+    title: String
+    views: Int
+    author: User
+}
+
+type Mutation {
+    authenticateUser(idToken: String): AuthenticationResponse
+}
+
+type AuthenticationResponse {
+    token: String
+    user: User
+}

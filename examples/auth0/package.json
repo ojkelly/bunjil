@@ -1,0 +1,42 @@
+{
+    "name": "bunjil-auth0",
+    "version": "1.0.0",
+    "main": "src/index.ts",
+    "description": "Server",
+    "license": "MIT",
+    "author": "Owen Kelly <owen@owenkelly.com.au",
+    "private": true,
+    "scripts": {
+        "test:watch": "ava-ts ./tests/**/*.spec.ts --watch",
+        "debug": "ts-node --inspect-brk src/index.ts",
+        "dev":
+            "NODE_ENV=development nodemon -e ts,graphql,gql -x ts-node ./src/index.ts",
+        "dev:debug":
+            "DEBUG=bunjil:*,wahn:* NODE_ENV=development nodemon -e ts,graphql,gql -x ts-node ./src/index.ts"
+    },
+    "devDependencies": {
+        "@types/auth0-js": "^8.11.2",
+        "@types/express-jwt": "0.0.39",
+        "@types/faker": "^4.1.2",
+        "@types/mkdirp": "^0.5.2",
+        "@types/node": "^9.6.1",
+        "@types/typescript": "^2.0.0"
+    },
+    "dependencies": {
+        "apollo-errors": "^1.7.1",
+        "auth0-js": "^9.4.2",
+        "bunjil": "^1.0.6",
+        "express-jwt": "^5.3.1",
+        "faker": "^4.1.0",
+        "graphql": "0.13.2",
+        "graphql-config": "^2.0.1",
+        "jwks-rsa": "^1.2.1",
+        "koa-cors": "^0.0.16",
+        "mkdirp": "^0.5.1",
+        "moment": "^2.21.0",
+        "nodemon": "^1.17.2",
+        "react-datepicker": "^1.3.0",
+        "ts-node": "^5.0.1",
+        "typescript": "^2.8.1"
+    }
+}

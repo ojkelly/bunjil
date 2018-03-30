@@ -1,0 +1,42 @@
+# If you make any changes here, you need to restart webpack for them to
+# have an effect
+
+# Dev environment
+development:
+  domain: localhost
+  graphQLEndpoint: 'http://localhost:4444/graphql'
+  jwt:
+    secret: 'ChangeThisToASecret'
+    issuer: 'DemoIssuer'
+    audience: 'DemoAudience'
+  sentry:
+    enable: false
+    url: ''
+  auth0:
+    domain:   # Get this from Auth0
+    clientID: # Get this from Auth0
+    redirectUri: 'http://localhost:8080/callback/auth0'
+    logoutReturnTo: 'http://localhost:8080/'
+    audience: # Get this from Auth0
+    responseType: 'id_token'
+    scope: 'openid profile email'
+    alg: 'RS256'
+    connections:
+      - 'google-oauth2'
+    socialBigButtons: false
+
+# Prod
+production:
+  domain: example.com
+  auth0:
+    domain:   # Get this from Auth0
+    clientID: # Get this from Auth0
+    redirectUri: 'http://localhost:8080/callback/auth0'
+    logoutReturnTo: 'http://localhost:8080/'
+    audience: # Get this from Auth0
+    responseType: 'id_token'
+    scope: 'openid profile email'
+    alg: 'RS256'
+    connections:
+      - 'google-oauth2'
+    socialBigButtons: false

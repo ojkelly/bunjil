@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "umd",
+        "outDir": "./.build",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "moduleResolution": "node",
+        "strict": true,
+        "sourceMap": true,
+        "inlineSources": false,
+        "strictNullChecks": true,
+        "watch": true,
+        "allowSyntheticDefaultImports": false
+    },
+    "filesGlob": [
+        "typings.d.ts",
+        "./src/**/*.ts",
+        "./test/**/*.ts",
+        "**/*.css"
+    ],
+    "exclude": ["node_modules"]
+}

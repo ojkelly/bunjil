@@ -24,8 +24,16 @@ test("Can merge schemas, and mask a type", async t => {
         password: String
       }
 
+      type Post {
+        id: ID
+        title: String
+        views: Int
+        author: User
+      }
+
       type Query {
         User(id: ID): User
+        topPosts(limit: Int): [Post]
       }
     `;
     const schema = makeExecutableSchema({ typeDefs });
@@ -34,6 +42,7 @@ test("Can merge schemas, and mask a type", async t => {
         schema,
         mocks: {
             Query: () => ({
+                topPosts: () => new MockList(topPostsLimit),
                 User: () => ({
                     id: faker.random.uuid(),
                     name: faker.name.findName(),
@@ -47,7 +56,7 @@ test("Can merge schemas, and mask a type", async t => {
     const policies: Policy[] = [
         {
             id: faker.random.uuid(),
-            resources: ["Query::User", "User::*"],
+            resources: ["Query::*", "User::*", "Posts:*"],
             actions: ["query"],
             effect: PolicyEffect.Allow,
             roles: ["*"],
@@ -79,6 +88,7 @@ test("Can merge schemas, and mask a type", async t => {
         id: ID
         name: String
         email: String
+        location: String
       }
       type Query {
         User(id: ID): User
@@ -104,22 +114,23 @@ test("Can merge schemas, and mask a type", async t => {
     // Run the bunjil start, but dont bind the server to a port
     await bunjil.start();
 
-    const res: any = await request(bunjil.koa.callback())
-        .post(endpoints.graphQL)
-        .send({
-            query: `
+    // Create the server
+    const server: any = await request(bunjil.koa.callback());
+
+    const res: any = await server.post(endpoints.graphQL).send({
+        query: `
               query getUser {
                 User {
                   id
                   name
                   email
-                  password
+                  location
                 }
               }
           `,
-        });
+    });
 
-    t.is(res.status, 400);
+    t.is(res.status, 200);
     t.false(
         typeof res !== "undefined" &&
             typeof res.body !== "undefined" &&
@@ -127,4 +138,29 @@ test("Can merge schemas, and mask a type", async t => {
             typeof res.body.data.User.password === "string",
         "Masking failed, password field exists",
     );
+
+    // Try an authenticated request
+    const topPosts = await server.post(endpoints.graphQL).send({
+        query: `
+            query topPosts {
+              topPosts(limit: ${topPostsLimit}) {
+                id
+                title
+                views
+                author {
+                  id
+                  name
+                }
+              }
+            }
+        `,
+    });
+    t.is(topPosts.status, 200);
+    t.notDeepEqual(topPosts.body.data, {
+        topPosts: null,
+    });
+    t.is(topPosts.body.data.errors, undefined);
+    if (topPosts.body.data.topPosts) {
+        t.is(topPosts.body.data.topPosts.length, topPostsLimit);
+    }
 });
