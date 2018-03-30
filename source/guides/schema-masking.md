@@ -96,7 +96,7 @@ bunjil.addSchema({ schemas: [maskingSchema] });
 The key points to note is that we added the base schema (which had `User.password`) first, and then
 we added our masking schema.
 
-> _By defualt, Bunjil will always overwrite older types with newer types._
+> _By default, Bunjil will always overwrite older types with newer types._
 
 #### Namespaces
 
