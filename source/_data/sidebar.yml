@@ -10,13 +10,12 @@ guides:
   schema-merging:
     schema-masking: schema-masking.html
   integration-servers:
-    generic: generic.html
     prisma: prisma.html
   authentication:
     auth0: auth0.html
   policies:
-    login-policy: login-policy.html
-    restricting-access: restricting-access.html
+    example-policies: example-policies.html
+    login-policies: login-policies.html
     conditional-access: conditional-access.html
 
 concepts:

@@ -28,7 +28,7 @@ sidebar:
     contributing: Contributing
 
   guides:
-    integration-servers: Integrating with GraphQL Servers
+    integration-servers: Integration
     generic: Generic
     prisma: Prisma
     authentication: Authentication
@@ -37,7 +37,8 @@ sidebar:
     passport: Passport.js
     policies: Policies
     restricting-access: Restricting Access
-    login-policy: Login Policy
+    login-policies: Login Policies
+    example-policies: Example Policies
     conditional-access: Conditional Access
     schema-merging: Schema Merging
     schema-masking: Schema Masking
