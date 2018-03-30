@@ -40,6 +40,7 @@ sidebar:
     login-policy: Login Policy
     conditional-access: Conditional Access
     schema-merging: Schema Merging
+    schema-masking: Schema Masking
 
 
   concepts:

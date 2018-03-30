@@ -8,7 +8,7 @@ docs:
 
 guides:
   schema-merging:
-    generic: schema-merging.html
+    schema-masking: schema-masking.html
   integration-servers:
     generic: generic.html
     prisma: prisma.html
