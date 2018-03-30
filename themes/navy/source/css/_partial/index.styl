@@ -31,8 +31,8 @@
     padding-right: 10px
 
 #banner-start-link
-  color: #fff
-  background: color-link
+  color: lighten(color-accent, 50%)
+  background: darken(color-accent, 10%)
   display: inline-block
   padding: 15px
   text-decoration: none
@@ -72,7 +72,8 @@
 .streamline-icon
   width 130px
   margin 10px 20px 0 0
-  float left 
+  float left
+  opacity 0.6
 
 .intro-feature-icon
   color: color-link
@@ -97,7 +98,7 @@
 
 #intro-cmd-wrap
   max-width: 700px
-  background: #eee
+  background: lighten(#1e1d22, 10)
   padding: 15px 0
   margin: 25px gutter-width * -1 0
   @media mq-normal
@@ -131,4 +132,4 @@
   transition: 0.2s
   &:hover
     background: @border-color
-    color: #fff
+    color: #b3b3b3

@@ -16,13 +16,14 @@ Every policy needs a unique ID. This is intended for tracing back the results of
 
 |Property|Type|Description|
 |---|---|---|
-|`id`|`string`|A unique string describing this policy.|
-|`effect`|`PolicyEffect` or `string`|One of `PolicyEffect.Allow` or `PolicyEffect.Deny` or just a string of `Allow` or `Deny`.|
-|`denyType?`|`string`| Returned to the client with `PolicyEffect.Deny`, for example `mfa-required`.|
-|`actions`|Array of `string`|One or more of `query`, `mutation`, `subscription`.|
-|`resources`|Array of `string`|See [resources](#Resources)|
-|`roles`|Array of `string`|An array of roles, see [roles](#Roles)|
-|`conditions`|Array of `PolicyCondition`|See [conditions](#Conditions)|
+| <i>id</i> |_string_|A unique string describing this policy.|
+|_effect_|_PolicyEffect_ or _string_|One of _PolicyEffect.Allow_ or _PolicyEffect.Deny_ or just a string of _Allow_ or _Deny_.|
+|_denyType?_|_string_| Returned to the client with _PolicyEffect.Deny_, for example _mfa-required_.|
+|_actions_|Array of _string_|One or more of _query_, _mutation_, _subscription_.|
+|_resources_|Array of _string_|See [resources](#Resources)|
+|_roles_|Array of _string_|An array of roles, see [roles](#Roles)|
+|_conditions_|Array of _PolicyCondition_|See [conditions](#Conditions)|
+
 
 ### Resources
 
@@ -107,10 +108,10 @@ You can also use wildcards with roles, but they need to be specified as a role i
 
 |Property|Type|Description|
 |---|---|---|
-|`field`|`string`|A dot path to the `key` of the context object to compare, eg `context.request.ip`.|
-|`expected`<br> _(optional)_|Array of `number` or <br> Array of `string`|An array of expected values |
-|`expectedOnContext`<br> _(optional)_|Array of `string`| A dot path to the context object|
-|`operator`|`PolicyOperator`| One of `match`, `notMatch`, `lessThan`, `greaterThan`|
+|_field_|_string_|A dot path to the _key_ of the context object to compare, eg _context.request.ip_.|
+|_expected_<br> _(optional)_|Array of _number_ or <br> Array of _string_|An array of expected values |
+|_expectedOnContext_<br> _(optional)_|Array of _string_| A dot path to the context object|
+|_operator_|_PolicyOperator_| One of _match_, _notMatch_, _lessThan_, _greaterThan_|
 
 > You must pass either `expected` or `expectedOnContext` if you are adding a condition to a policy.
 
