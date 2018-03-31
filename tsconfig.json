@@ -22,5 +22,6 @@
         "./test/**/*.ts",
         "./.graphql/*.ts",
         "./.graphql/*.graphql"
-    ]
+    ],
+    "exclude": ["./examples/**"]
 }

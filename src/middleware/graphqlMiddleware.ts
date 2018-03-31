@@ -15,7 +15,7 @@ interface KoaHandler {
     (req: any, next): void;
 }
 
-function graphqlKoa(options: GraphQLOptions): KoaHandler {
+function graphqlKoaMiddleware(options: GraphQLOptions): KoaHandler {
     if (!options) {
         throw new Error("Apollo Server requires options.");
     }
@@ -71,4 +71,4 @@ function graphqlKoa(options: GraphQLOptions): KoaHandler {
     };
 }
 
-export { graphqlKoa, KoaHandler };
+export { graphqlKoaMiddleware, KoaHandler };

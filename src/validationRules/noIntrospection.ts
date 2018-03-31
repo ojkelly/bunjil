@@ -1,3 +1,5 @@
+// From/inspired by https://github.com/helfer/graphql-disable-introspection/blob/master/index.js
+
 import * as graphql from "graphql";
 
 function noIntrospection(context) {

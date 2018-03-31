@@ -21,7 +21,9 @@ import * as winston from "winston";
 import { Wahn } from "wahn";
 
 import { ResolverError, AuthorizationError } from "./errors";
-import { graphqlKoa } from "./middleware/graphql";
+import { graphqlKoaMiddleware } from "./middleware/graphqlMiddleware";
+import { sanitiseMiddleware } from "./middleware/sanitiseMiddleware";
+import { persistedQueriesMiddleware } from "./middleware/persistedQueriesMiddleware";
 
 import { noIntrospection } from "./validationRules/noIntrospection";
 
@@ -33,6 +35,7 @@ import {
     AuthenticationMiddleware,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
+    KoaMiddleware,
     playgroundOptions,
     playgroundTheme,
     PlaygroundSettings,
@@ -76,6 +79,7 @@ class Bunjil {
         useApolloCache: boolean;
         useApolloTracing: boolean;
         disableIntrospection: boolean;
+        usePersistedQueries: boolean;
     };
 
     public endpoints: {
@@ -96,6 +100,7 @@ class Bunjil {
             Subscription: any;
         };
         validationRules?: any;
+        persistedQueries?: any;
     };
 
     // Authorization
@@ -103,6 +108,9 @@ class Bunjil {
 
     // Caching
     private cache: Cache | undefined;
+
+    private sanitiseMiddleware: KoaMiddleware;
+    private persistedQueriesMiddleware: KoaMiddleware;
 
     // [ Constructor ]--------------------------------------------------------------------------
 
@@ -164,6 +172,10 @@ class Bunjil {
                 typeof options.server.disableIntrospection === "boolean"
                     ? options.server.disableIntrospection
                     : false,
+            usePersistedQueries:
+                typeof options.server.usePersistedQueries === "boolean"
+                    ? options.server.usePersistedQueries
+                    : false,
         };
 
         if (
@@ -219,6 +231,9 @@ class Bunjil {
         // Initialise Koa and its router
         this.koa = new Koa();
         this.router = new KoaRouter();
+
+        this.sanitiseMiddleware = sanitiseMiddleware.bind(this);
+        this.persistedQueriesMiddleware = persistedQueriesMiddleware.bind(this);
     }
 
     /**
@@ -369,10 +384,13 @@ class Bunjil {
             // if it can populate ctx.user with at least an id and an array of roles
             this.authenticationMiddleware.bind(this),
 
+            // Now we run the persistedQueriesMiddleware
+            this.persistedQueriesMiddleware.bind(this),
+
             // And now we run the actual graphQL query
             // In each resolver we run the authorization callback, against the data we just
             // added to ctx.user
-            graphqlKoa({
+            graphqlKoaMiddleware({
                 schema: this.graphQL.schema,
                 debug: this.debug,
                 // tracing: this.serverConfig.tracing,
@@ -387,7 +405,7 @@ class Bunjil {
         // Add the graphql GET route
         this.router.get(
             this.endpoints.graphQL,
-            graphqlKoa({
+            graphqlKoaMiddleware({
                 schema: this.graphQL.schema,
                 debug: this.debug,
                 tracing: true,
@@ -646,39 +664,23 @@ class Bunjil {
         }
     }
 
-    /**
-     * Sanitisation Middleware
-     *
-     * This is run as the last middleware before the response is returned.
-     */
-    private async sanitiseMiddleware(
-        ctx: any,
-        next: () => Promise<any>,
-    ): Promise<any> {
-        // Wait for the GraphQL query to resolve
-        await next();
+    public addPersistedQueries(persistedQueries: any): void {
+        if (this.serverConfig.usePersistedQueries) {
+            this.graphQL.persistedQueries = persistedQueries;
+        } else {
+            throw Error(
+                "You cannot add persisted queries as server.usePersistedQueries is false.",
+            );
+        }
+    }
 
-        // Remove caching and or tracing information if there isn't
-        // going to be an Apollo Engine proxy in front
-        if (
-            this.serverConfig.useApolloCache === false ||
-            this.serverConfig.useApolloTracing === false
-        ) {
-            const body: any = JSON.parse(ctx.response.body);
-            const sanitisedBody = {
-                data: body.data,
-                errors: body.errors,
-                extensions: {
-                    ...body.extensions,
-                    cacheControl: this.serverConfig.useApolloCache
-                        ? body.extensions.cacheControl
-                        : undefined,
-                    tracing: this.serverConfig.useApolloTracing
-                        ? body.extensions.tracing
-                        : undefined,
-                },
-            };
-            ctx.body = JSON.stringify(sanitisedBody);
+    public getPersistedQueries(): any {
+        if (this.serverConfig.usePersistedQueries) {
+            return this.graphQL.persistedQueries;
+        } else {
+            throw Error(
+                "You cannot get persisted queries as server.usePersistedQueries is false.",
+            );
         }
     }
 }

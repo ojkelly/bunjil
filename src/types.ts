@@ -54,7 +54,10 @@ type BunjilOptions = {
         // Disable introspection queries
         // Useful when you want to hide the schema of your public api
         // This will prevent playground from working
-        disableIntrospection?: boolean;
+        disableIntrospection?: boolean | undefined;
+
+        // Persisted queries
+        usePersistedQueries?: boolean | undefined;
     };
 
     // GraphQL
@@ -76,6 +79,9 @@ type BunjilOptions = {
 interface AuthenticationMiddleware {
     (ctx: Koa.Context, next: () => Promise<any>): Promise<any>;
 }
+interface KoaMiddleware {
+    (ctx: Koa.Context, next: () => Promise<any>): Promise<any>;
+}
 
 type AuthorizationCallbackOptions = {
     action: string;
@@ -91,6 +97,7 @@ export {
     AuthenticationMiddleware,
     AuthorizationCallback,
     AuthorizationCallbackOptions,
+    KoaMiddleware,
     playgroundOptions,
     playgroundTheme,
     PlaygroundSettings,
