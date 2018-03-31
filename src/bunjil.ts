@@ -23,6 +23,8 @@ import { Wahn } from "wahn";
 import { ResolverError, AuthorizationError } from "./errors";
 import { graphqlKoa } from "./middleware/graphql";
 
+import { noIntrospection } from "./validationRules/noIntrospection";
+
 import { Cache } from "./cache";
 
 import { isType } from "./utils";
@@ -73,6 +75,7 @@ class Bunjil {
         disableBunjilCache: boolean;
         useApolloCache: boolean;
         useApolloTracing: boolean;
+        disableIntrospection: boolean;
     };
 
     public endpoints: {
@@ -92,6 +95,7 @@ class Bunjil {
             Mutation: any;
             Subscription: any;
         };
+        validationRules?: any;
     };
 
     // Authorization
@@ -133,10 +137,6 @@ class Bunjil {
             throw new Error("options.endpoints.graphQL is required");
         }
 
-        // Initialise Koa and its router
-        this.koa = new Koa();
-        this.router = new KoaRouter();
-
         // Setup the serverConfig
         this.serverConfig = {
             ...options.server,
@@ -160,7 +160,20 @@ class Bunjil {
                 typeof options.server.useApolloTracing === "boolean"
                     ? options.server.useApolloTracing
                     : false,
+            disableIntrospection:
+                typeof options.server.disableIntrospection === "boolean"
+                    ? options.server.disableIntrospection
+                    : false,
         };
+
+        if (
+            this.serverConfig.disableIntrospection === true &&
+            this.playgroundOptions.enabled === true
+        ) {
+            throw new Error(
+                "Can't start playground with disableIntrospection: true.",
+            );
+        }
 
         if (options.server.port) {
             this.serverConfig.port = Number(options.server.port);
@@ -202,6 +215,10 @@ class Bunjil {
         ) {
             this.cache = new Cache();
         }
+
+        // Initialise Koa and its router
+        this.koa = new Koa();
+        this.router = new KoaRouter();
     }
 
     /**
@@ -223,15 +240,6 @@ class Bunjil {
         info: any,
         next: any,
     ): Promise<any> {
-        // log("resolverHook", {
-        //     root,
-        //     args,
-        //     context,
-        //     user: context.user,
-        //     info,
-        //     cacheControl: info.cacheControl,
-        // });
-
         // construct an Resource name
         let resource: string = `${info.parentType.name}:`;
         resource = `${resource}:${info.fieldName}`;
@@ -338,6 +346,10 @@ class Bunjil {
 
         this.finaliseResolvers();
 
+        if (this.serverConfig.disableIntrospection === true) {
+            this.graphQL.validationRules = [noIntrospection];
+        }
+
         // Add the graphql POST route
         this.router.post(
             this.endpoints.graphQL,
@@ -368,6 +380,7 @@ class Bunjil {
                 context: {
                     ...this.graphQL.context,
                 },
+                validationRules: this.graphQL.validationRules,
             }),
         );
 

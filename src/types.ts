@@ -50,6 +50,11 @@ type BunjilOptions = {
         // Enable to print tracing data for use
         // with Apollo Engine
         useApolloTracing?: boolean | undefined;
+
+        // Disable introspection queries
+        // Useful when you want to hide the schema of your public api
+        // This will prevent playground from working
+        disableIntrospection?: boolean;
     };
 
     // GraphQL
