@@ -17,6 +17,10 @@ Create a new instance by passing an options object detailed below.
 |_server.port_|_number_|The port to bind on. _(Technically optional to support unit/integration tests, but you need it in normal use)_.|
 |_server.tracing_ <br> _(optional)_ <br> Default: _false_|_boolean_ _undefined_|_true_ if you want to enable tracing on the underlying _apollo-server_|
 |_server.cacheControl_ <br> _(optional)_ <br> Default: _false_|_boolean_ _undefined_|_true_ if you want to enable tracing on the underlying _apollo-server_. |
+|_server.disableIntrospection_|_boolean_|Disable intropsection queries. This is useful in production to hide your public graphql schema.|
+|_server.disableBunjilCache_|_boolean_|Set to true to disable Bunjil's cache, useful when cacheControl is true, as it lets you use Apollo Engine's caching.|
+|_server.useApolloCache|_boolean_|Enable to print information regarding the cacheability for use with Apollo Engine.|
+|_server.useApolloTracing|_boolean_|Enable to print tracing data for use with Apollo Engine.|
 |_endpoints_ | Preceding slash **required**.||
 |_endpoints.graphQL_|_string_|Typically _/graphql_, this is the location where the GraphQL api is served from.|
 |_endpoints.graphQL_|_subscriptions_|Typically _/graphql_, this is the location where the GraphQL subscriptions api is served from.|
