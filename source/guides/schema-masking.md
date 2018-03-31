@@ -129,4 +129,4 @@ const schema = makeExecutableSchema({
 });
 ```
 
-You can learn more about schema stiching [here](https://www.apollographql.com/docs/graphql-tools/schema-stitching.html)
+You can learn more about schema stiching [here](https://www.apollographql.com/docs/graphql-tools/schema-stitching.html).
