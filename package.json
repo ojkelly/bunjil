@@ -1,6 +1,6 @@
 {
   "name": "bunjil",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A GraphQL bastion server",
   "license": "MIT",
   "author": "Owen Kelly <owen@owenkelly.com.au>",
@@ -23,9 +23,9 @@
     "send-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "docs": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out lib/docs && opn lib/docs/index.html",
     "docs:json": "typedoc --mode file --json lib/docs/typedoc.json src/index.ts",
-    "release-minor": "yarn run build && standard-version --release-as minor",
-    "release-patch": "yarn run build && standard-version --release-as patch",
-    "release-major": "yarn run build && standard-version --sign --release-as major"
+    "release-minor": "yarn run clean && yarn run build && standard-version --release-as minor",
+    "release-patch": "yarn run clean && yarn run build && standard-version --release-as patch",
+    "release-major": "yarn run clean && yarn run build && standard-version --sign --release-as major"
   },
   "repository": {
     "type": "github",
