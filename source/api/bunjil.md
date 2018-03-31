@@ -31,19 +31,12 @@ Create a new instance by passing an options object detailed below.
 |_hooks.authorization_|_function_|A hook to allow custom authorization logic. <br> _This overrides the policy engine and is not reccomended unless you require a different authorization method._ <br>**See [Authorization](#Authorization-function)**|
 |_playgroundOptions_||**See [Playground](#Playground)**|
 
-#### Authentication function
-(coming soon)
-
-#### Authorization function
-(coming soon)
-
 
 ## addSchema({ schemas: [ schema ] })
 
 |Property|Type|Description|
 |---|---|---|
 |_schemas_|_Array_|An array of GraphQL schemas.|
-
 
 
 ## addPrismaSchema({ typeDefs, prisma, contextKey })
