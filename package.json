@@ -75,7 +75,7 @@
     "koa-router": "^7.4.0",
     "node-cache": "^4.2.0",
     "object-hash": "^1.3.0",
-    "prisma-binding": "^1.5.16",
+    "prisma-binding": "^2.0.0",
     "wahn": "^0.10.0",
     "winston": "^2.4.1"
   },
