@@ -64,7 +64,7 @@
     "debug": "^3.1.0",
     "graphql": "0.13.2",
     "graphql-add-middleware": "^0.1.5",
-    "graphql-binding": "^1.2.5",
+    "graphql-binding": "^2.0.0",
     "graphql-playground-middleware-koa": "^1.4.3",
     "graphql-tools": "^2.23.1",
     "jsonwebtoken": "^8.2.0",
