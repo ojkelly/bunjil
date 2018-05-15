@@ -16,19 +16,16 @@ It comes with Policy Based authorization, and hook for your own authentication (
 
 It’s purpose is to allow the stitching of one or more private GraphQL Schemas into a public one.
 
-## Getting Started
-
-Documentation coming real soon.
 
 # Roadmap
 
-*   [in progress] Documentation
+*   [x] Documentation
 *   [x] Merge multiple GraphQL schemas into one public schema
 *   [ ] Ability to hide Types
 *   [ ] Ability to hide fields (masking)
 *   [x] Policy based authorization down to the field/edge level
 *   [x] Ability to deny access to fields based on roles with a policy
-*   [ ] Caching, and caching policies down to the field level
+*   [x] Caching, and caching policies down to the field level
 *   [x] Authentication hook
 *   [x] Authorization hook
 
