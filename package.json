@@ -92,7 +92,7 @@
     "nyc": "11.6.0",
     "prisma": "1.5.1",
     "rimraf": "2.6.2",
-    "standard-version": "4.3.0",
+    "standard-version": "4.4.0",
     "supertest": "3.0.0",
     "ts-node": "5.0.1",
     "typescript": "2.8.1",
