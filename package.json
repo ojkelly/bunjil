@@ -95,7 +95,7 @@
     "standard-version": "4.3.0",
     "supertest": "3.0.0",
     "ts-node": "5.0.1",
-    "typescript": "2.8.1",
+    "typescript": "2.9.2",
     "wedgetail": "1.0.0"
   },
   "resolutions": {
