@@ -3068,9 +3068,9 @@ graphcool-yml@0.4.15:
     scuid "^1.0.2"
     yaml-ast-parser "^0.0.40"
 
-graphql-add-middleware@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/graphql-add-middleware/-/graphql-add-middleware-0.1.5.tgz#622d07a6e5bb52870086549d41de56b4c2efbffd"
+graphql-add-middleware@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-add-middleware/-/graphql-add-middleware-0.3.0.tgz#0cfe2ee7be1ffb8be513a8e16e161ebcd438ba46"
   dependencies:
     graphql-tools "^2.21.0"
     koa-compose "^3.2.1"
