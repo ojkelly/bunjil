@@ -83,7 +83,7 @@
     "@types/faker": "4.1.2",
     "@types/supertest": "2.0.4",
     "ava": "0.25.0",
-    "ava-ts": "0.24.2",
+    "ava-ts": "0.25.2",
     "codecov": "3.0.0",
     "dotenv-cli": "1.4.0",
     "faker": "4.1.0",
