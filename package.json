@@ -91,7 +91,7 @@
     "husky": "0.14.3",
     "nyc": "11.6.0",
     "prisma": "1.5.1",
-    "rimraf": "2.6.2",
+    "rimraf": "2.6.3",
     "standard-version": "4.3.0",
     "supertest": "3.0.0",
     "ts-node": "5.0.1",
